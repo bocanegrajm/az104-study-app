@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-104 // Azure Administrator Study Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-tertiary: #1a1a28;
+  --bg-card: #161622;
+  --bg-hover: #1e1e30;
+  --accent-cyan: #00e5ff;
+  --accent-blue: #4d7cff;
+  --accent-purple: #a855f7;
+  --accent-green: #22c55e;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-pink: #ec4899;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --border: #2a2a3e;
+  --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.15);
+  --glow-purple: 0 0 20px rgba(168, 85, 247, 0.15);
+  --glow-green: 0 0 20px rgba(34, 197, 94, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+/* Background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,229,255,0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(168,85,247,0.04), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grid overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#app { position: relative; z-index: 1; }
+
+/* ============ HEADER ============ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent-cyan);
+  letter-spacing: -0.5px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--bg-primary);
+  font-weight: 900;
+}
+
+.logo span { color: var(--text-muted); font-weight: 400; }
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-tab {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+.nav-tab.active { color: var(--accent-cyan); background: rgba(0,229,255,0.08); }
+
+.progress-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-green);
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+/* ============ MAIN LAYOUT ============ */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ============ DASHBOARD ============ */
+.dashboard-hero {
+  text-align: center;
+  padding: 3rem 0 2rem;
+}
+
+.dashboard-hero h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-hero p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.stat-card:hover { border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
+.stat-number { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--accent-cyan); }
+.stat-label { color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
+
+/* Module Grid */
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.module-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.module-card:hover { border-color: var(--accent-cyan); box-shadow: var(--glow-cyan); transform: translateY(-3px); }
+.module-card:hover::before { opacity: 1; }
+
+.module-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.module-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.3px; }
+.module-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px; }
+
+.module-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.module-difficulty {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.diff-beginner { color: var(--accent-green); background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+.diff-intermediate { color: var(--accent-orange); background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); }
+.diff-advanced { color: var(--accent-red); background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); }
+
+.module-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  margin-left: 16px;
+  overflow: hidden;
+}
+
+.module-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ============ MODULE DETAIL VIEW ============ */
+.module-detail { animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  margin-bottom: 1.5rem;
+}
+
+.back-btn:hover { color: var(--accent-cyan); border-color: var(--accent-cyan); }
+
+.module-header {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.module-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 0.5rem;
+}
+
+.analogy-box {
+  background: linear-gradient(135deg, rgba(0,229,255,0.05), rgba(168,85,247,0.05));
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.analogy-box .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.analogy-box p { color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; }
+
+/* Section tabs */
+.section-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid var(--border);
+}
+
+.section-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.section-tab.active { background: var(--bg-card); color: var(--accent-cyan); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.section-tab:hover:not(.active) { color: var(--text-primary); }
+
+/* Content sections */
+.content-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem;
+}
+
+.concept-block {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.concept-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.concept-block h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--accent-cyan);
+}
+
+.concept-block p, .concept-block li {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.concept-block ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.concept-block li {
+  padding: 6px 0 6px 20px;
+  position: relative;
+}
+
+.concept-block li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent-cyan);
+  font-weight: bold;
+}
+
+.key-term {
+  display: inline-block;
+  background: rgba(0,229,255,0.08);
+  color: var(--accent-cyan);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.tip-box {
+  background: rgba(34,197,94,0.06);
+  border-left: 3px solid var(--accent-green);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+
+.tip-box .tip-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent-green);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.warning-box {
+  background: rgba(245,158,11,0.06);
+  border-left: 3px solid var(--accent-orange);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+
+.warning-box .warn-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+/* ============ QUIZ ============ */
+.quiz-container { animation: fadeIn 0.3s ease; }
+
+.quiz-question {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-progress {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.quiz-question h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; line-height: 1.5; }
+
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.quiz-option:hover { border-color: var(--accent-cyan); background: var(--bg-hover); }
+
+.quiz-option.selected { border-color: var(--accent-blue); background: rgba(77,124,255,0.08); }
+.quiz-option.correct { border-color: var(--accent-green); background: rgba(34,197,94,0.08); color: var(--accent-green); }
+.quiz-option.incorrect { border-color: var(--accent-red); background: rgba(239,68,68,0.08); color: var(--accent-red); }
+
+.quiz-option .letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.quiz-option.correct .letter { background: var(--accent-green); color: var(--bg-primary); }
+.quiz-option.incorrect .letter { background: var(--accent-red); color: white; }
+
+.quiz-explanation {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0,229,255,0.05);
+  border: 1px solid rgba(0,229,255,0.1);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.quiz-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.quiz-btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: var(--bg-primary);
+}
+
+.quiz-btn-primary:hover { transform: translateY(-1px); box-shadow: var(--glow-cyan); }
+
+.quiz-btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.quiz-btn-secondary:hover { border-color: var(--accent-cyan); }
+
+/* Score card */
+.score-card {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.score-card .score-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+.score-card .score-value.pass { color: var(--accent-green); }
+.score-card .score-value.fail { color: var(--accent-orange); }
+.score-card .score-message { color: var(--text-secondary); font-size: 1.1rem; margin-top: 8px; }
+
+/* ============ ROADMAP ============ */
+.roadmap-container {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.roadmap-line {
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+  opacity: 0.3;
+}
+
+.roadmap-item {
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 2rem;
+}
+
+.roadmap-dot {
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-cyan);
+  background: var(--bg-primary);
+}
+
+.roadmap-dot.complete { background: var(--accent-cyan); }
+
+.roadmap-item .phase-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent-purple);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.roadmap-item h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.roadmap-item p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .modules-grid { grid-template-columns: 1fr; }
+  .dashboard-hero h1 { font-size: 2rem; }
+  .nav-tabs { display: none; }
+  .main { padding: 1rem; }
+  .section-tabs { flex-wrap: wrap; }
+}
+
+/* Hidden class */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ===========================
+// AZ-104 STUDY PLATFORM DATA
+// ===========================
+
+const MODULES = [
+  {
+    id: 1,
+    number: "MODULE 01",
+    title: "Identity — Microsoft Entra ID",
+    subtitle: "Users, Groups & Identity Management",
+    difficulty: "beginner",
+    examWeight: "Part of 'Manage Azure identities and governance' — 20-25% of exam",
+    analogy: "Think of Microsoft Entra ID like the security desk in a massive office building. Before anyone can enter, they need to check in, show their badge (credentials), and prove they belong. The security desk keeps a directory of everyone who works in the building — that's your Entra ID. Users are the people, Groups are the departments, and Roles are the access levels (intern vs. CEO).",
+    concepts: [
+      {
+        title: "What Even Is 'The Cloud'?",
+        content: "Before we talk Azure, let's back up. The cloud is simply someone else's computer — a lot of them, actually. Instead of buying a $10,000 server and putting it in your closet, you rent computing power from Microsoft's massive data centers around the world. You pay monthly like a utility bill instead of buying the whole power plant.",
+        tips: ["Azure has 60+ regions worldwide — more than any other cloud provider.", "You never physically touch Azure hardware. Everything is managed through a web portal, CLI, or API."]
+      },
+      {
+        title: "Microsoft Entra ID (Formerly Azure AD)",
+        content: "Entra ID is Azure's identity and access management service. It's the bouncer at the club. Every user, every app, every service that wants to access your Azure resources has to go through Entra ID first. It handles authentication (who are you?) and authorization (what can you do?).",
+        keyTerms: ["Tenant", "User Principal Name (UPN)", "Service Principal", "Managed Identity"],
+        tips: ["A Tenant is your organization's dedicated instance of Entra ID — like your company's own security system.", "The UPN typically looks like an email: jesse@yourcompany.onmicrosoft.com"]
+      },
+      {
+        title: "Users & Groups",
+        content: "Users represent individual people or services. Groups are containers that hold users together for easy management. Instead of giving 50 engineers access one-by-one, you create an 'Engineers' group and assign permissions once. Azure supports two group types: Security groups (for permissions) and Microsoft 365 groups (for collaboration).",
+        keyTerms: ["Cloud User", "Guest User", "Dynamic Group", "Assigned Group"],
+        tips: ["Dynamic Groups auto-add/remove members based on rules (like job title = 'Engineer').", "Guest users are external people (contractors, partners) invited into your tenant."]
+      },
+      {
+        title: "Bulk Operations & Self-Service",
+        content: "When you have thousands of users, you don't create them one by one. Azure supports bulk create, invite, and delete operations via CSV upload. Self-service password reset (SSPR) lets users reset their own passwords without calling IT — saving everyone time and money.",
+        tips: ["Bulk operations use CSV files — learn the required column format for the exam.", "SSPR can require 1 or 2 authentication methods (phone, email, security questions)."]
+      }
+    ],
+    labTasks: [
+      "Create and configure user accounts in the Azure portal",
+      "Create groups and add members with dynamic membership rules",
+      "Configure self-service password reset (SSPR)",
+      "Perform bulk user operations with CSV imports"
+    ],
+    quiz: [
+      {
+        q: "You just started at a new company. To log into Azure, you need an identity in which Azure service?",
+        options: ["Azure Storage", "Microsoft Entra ID", "Azure Virtual Machines", "Azure Key Vault"],
+        correct: 1,
+        explanation: "Microsoft Entra ID (formerly Azure Active Directory) is the identity and access management service. Think of it as the security desk — you can't enter the building (Azure) without checking in here first."
+      },
+      {
+        q: "Your company has 200 engineers who all need the same permissions. What's the BEST approach?",
+        options: ["Assign permissions to each user individually", "Create a Security Group and assign permissions to the group", "Give everyone Global Admin access", "Use a single shared account for all engineers"],
+        correct: 1,
+        explanation: "Security Groups are the best practice for managing permissions at scale. Assign permissions to the group once, then add users to the group. It's like giving a department badge that opens certain doors — way better than programming each person's badge individually."
+      },
+      {
+        q: "A Dynamic Group automatically adds members based on what?",
+        options: ["Random selection", "User attribute rules (like job title or department)", "First-come-first-serve", "Manual admin approval"],
+        correct: 1,
+        explanation: "Dynamic Groups use rules based on user attributes. For example: 'If jobTitle equals Engineer, add to Engineers group.' When someone's title changes, they're automatically moved — no admin needed."
+      },
+      {
+        q: "What does SSPR stand for and what does it do?",
+        options: ["Server-Side Password Rendering — generates passwords", "Self-Service Password Reset — lets users reset their own passwords", "Secure Socket Password Relay — encrypts passwords", "System Security Protocol Review — audits passwords"],
+        correct: 1,
+        explanation: "Self-Service Password Reset (SSPR) lets users reset their passwords without calling IT. It's like a 'Forgot Password' link for your corporate identity."
+      },
+      {
+        q: "What is a 'Tenant' in Microsoft Entra ID?",
+        options: ["A virtual machine", "Your organization's dedicated instance of Entra ID", "A type of storage account", "A network subnet"],
+        correct: 1,
+        explanation: "A Tenant is your organization's private, dedicated space within Entra ID. Think of Microsoft Entra ID as a giant apartment building — your tenant is your specific apartment. It has your users, your groups, your policies."
+      }
+    ]
+  },
+  {
+    id: 2,
+    number: "MODULE 02",
+    title: "Governance & Compliance",
+    subtitle: "Subscriptions, RBAC & Azure Policy",
+    difficulty: "beginner",
+    analogy: "Imagine you own a chain of restaurants. Governance is the set of rules every restaurant must follow — food safety standards, hours of operation, how money is spent. Subscriptions are your individual restaurant locations. RBAC (Role-Based Access Control) decides who can do what — the head chef can change the menu, but a busboy can't. Azure Policy is the health inspector who enforces rules automatically.",
+    concepts: [
+      {
+        title: "Azure Subscriptions & Management Groups",
+        content: "A Subscription is a billing and access boundary for Azure resources. Think of it as a separate credit card account — each subscription gets its own bill and its own access rules. Management Groups let you organize multiple subscriptions into a hierarchy, so you can apply policies and access controls across many subscriptions at once.",
+        keyTerms: ["Subscription", "Management Group", "Resource Group", "Hierarchy"],
+        tips: ["Management Groups can be nested up to 6 levels deep.", "A single directory (tenant) can support 10,000 management groups."]
+      },
+      {
+        title: "RBAC — Role-Based Access Control",
+        content: "RBAC answers: 'Who can do what, and where?' It has three parts: the Security Principal (who), the Role Definition (what they can do), and the Scope (where they can do it). Scope flows down: if you have Reader access at the subscription level, you can read everything in every resource group under it.",
+        keyTerms: ["Owner", "Contributor", "Reader", "User Access Administrator", "Scope", "Role Assignment"],
+        tips: ["Owner = full control + can assign roles. Contributor = full control but can't assign roles. Reader = view-only.", "RBAC is DENY by default — if you don't have a role, you can't do anything.", "Custom roles are available if built-in roles don't fit your needs."],
+        warning: "Exam favorite: Know the difference between Owner, Contributor, and Reader cold. Also know that RBAC roles are ADDITIVE — you get the sum of all your role assignments."
+      },
+      {
+        title: "Azure Policy",
+        content: "Azure Policy enforces organizational standards. You create policy definitions (rules), group them into initiatives (collections of rules), and assign them to scopes. Policies can audit, deny, modify, or deploy resources. For example: 'All resources must have a CostCenter tag' or 'No VMs larger than Standard_D4 allowed.'",
+        keyTerms: ["Policy Definition", "Initiative", "Assignment", "Compliance", "Remediation"],
+        tips: ["Policies evaluate EXISTING resources too, not just new ones.", "Remediation tasks can fix non-compliant resources automatically."]
+      },
+      {
+        title: "Resource Tags & Locks",
+        content: "Tags are metadata key-value pairs (like 'CostCenter: Marketing') that help organize and track resources. Locks prevent accidental deletion or modification. A ReadOnly lock prevents changes; a Delete lock prevents deletion but allows changes.",
+        keyTerms: ["Tag", "ReadOnly Lock", "Delete Lock"],
+        tips: ["Tags are NOT inherited from resource groups by default — this is an exam trick!", "Even Owners can't delete a locked resource without first removing the lock."]
+      }
+    ],
+    labTasks: [
+      "Create a management group hierarchy",
+      "Assign RBAC roles at different scopes",
+      "Create and assign Azure Policy definitions",
+      "Apply resource tags and enforce tagging with policy",
+      "Configure resource locks"
+    ],
+    quiz: [
+      {
+        q: "Your company has 10 Azure subscriptions. You need to apply the same security policy to all of them. What should you use?",
+        options: ["Apply the policy to each subscription individually", "Create a Management Group containing all subscriptions", "Create a virtual network spanning all subscriptions", "Use Azure DevOps"],
+        correct: 1,
+        explanation: "Management Groups sit above subscriptions and let you apply policies, RBAC, and budgets across multiple subscriptions at once. It's like setting company-wide rules at the corporate level instead of at each store."
+      },
+      {
+        q: "A user has the Contributor role on a resource group and the Reader role on the subscription. What can they do in the resource group?",
+        options: ["Only read resources (Reader wins)", "Full control except assign roles (Contributor level)", "Nothing — the roles conflict", "Full control including assigning roles"],
+        correct: 1,
+        explanation: "RBAC roles are ADDITIVE. The user gets Contributor access on the resource group (the more permissive role). Reader at the subscription doesn't limit the Contributor role at the resource group level."
+      },
+      {
+        q: "You tag a resource group with 'Environment: Production'. Do the resources inside automatically inherit this tag?",
+        options: ["Yes, tags always inherit down", "No, tags do NOT inherit by default", "Only if you enable tag inheritance", "Only for virtual machines"],
+        correct: 1,
+        explanation: "This is a classic exam trap! Tags do NOT inherit by default. You need to use Azure Policy with a 'modify' or 'append' effect to automatically apply tags from a resource group to its resources."
+      },
+      {
+        q: "You put a Delete lock on a storage account. What happens when a Contributor tries to delete it?",
+        options: ["The deletion succeeds — Contributors have full access", "The deletion fails — locks override RBAC permissions", "The deletion requires double approval", "The account is marked for deletion in 30 days"],
+        correct: 1,
+        explanation: "Resource locks override RBAC. Even an Owner can't delete a Delete-locked resource without removing the lock first. Think of it as a physical padlock — doesn't matter if you have the key to the room."
+      },
+      {
+        q: "An Azure Policy with a 'Deny' effect will:",
+        options: ["Send an email warning", "Prevent non-compliant resource creation", "Delete existing non-compliant resources", "Only audit and report"],
+        correct: 1,
+        explanation: "The Deny effect blocks the creation or modification of resources that violate the policy. It's the security guard at the door — you're not getting in if you break the rules."
+      }
+    ]
+  },
+  {
+    id: 3,
+    number: "MODULE 03",
+    title: "Azure Resources & ARM Templates",
+    subtitle: "Infrastructure as Code & Automation",
+    difficulty: "intermediate",
+    analogy: "Imagine building with LEGO. You could build a castle brick-by-brick manually (Azure Portal), or you could follow a detailed instruction booklet that builds the exact same castle every time (ARM Template). The instruction booklet IS your ARM template — it's a JSON file that describes exactly what to build, how to configure it, and in what order. Bicep is like the same instructions but written in plain English instead of technical LEGO-speak.",
+    concepts: [
+      {
+        title: "Azure Resource Manager (ARM)",
+        content: "ARM is the deployment and management layer for Azure. EVERY request to Azure — whether from the Portal, CLI, PowerShell, or API — goes through ARM. It handles authentication, authorization, and orchestrates the deployment. Think of it as the general contractor who manages all the subcontractors building your house.",
+        keyTerms: ["ARM", "Resource Provider", "Resource Group", "Deployment"],
+        tips: ["Resource Groups are logical containers — resources in a group share the same lifecycle.", "A resource can only exist in ONE resource group.", "Deleting a resource group deletes EVERYTHING inside it."]
+      },
+      {
+        title: "ARM Templates (JSON)",
+        content: "ARM templates are JSON files that define the infrastructure you want to deploy. They're declarative — you describe WHAT you want, not HOW to build it. Azure figures out the how. Templates enable consistent, repeatable deployments. They support parameters (inputs), variables (computed values), resources (what to build), and outputs (return values).",
+        keyTerms: ["$schema", "parameters", "variables", "resources", "outputs", "dependsOn"],
+        tips: ["Templates are idempotent — running the same template twice produces the same result.", "Use parameters to make templates reusable across environments (dev, staging, prod)."]
+      },
+      {
+        title: "Bicep Templates",
+        content: "Bicep is a domain-specific language that compiles down to ARM JSON. It's much cleaner and easier to read. Think of ARM JSON as machine code and Bicep as a high-level programming language — they do the same thing, but Bicep is designed for humans.",
+        tips: ["Bicep files use the .bicep extension.", "You can decompile ARM JSON into Bicep using 'az bicep decompile'."]
+      },
+      {
+        title: "Deployment Methods",
+        content: "You can deploy templates via Azure Portal, PowerShell (New-AzResourceGroupDeployment), CLI (az deployment group create), Cloud Shell, or Azure DevOps pipelines. The Cloud Shell has both PowerShell and Bash built in with Azure tools pre-installed.",
+        keyTerms: ["Azure CLI", "Azure PowerShell", "Cloud Shell", "Incremental Deployment", "Complete Deployment"],
+        warning: "Exam key: Incremental mode adds/updates resources but doesn't delete missing ones. Complete mode DELETES resources not in the template. Default is Incremental."
+      }
+    ],
+    labTasks: [
+      "Create an ARM template to deploy a managed disk",
+      "Edit and redeploy the template with different parameters",
+      "Deploy a template using Cloud Shell with Azure PowerShell",
+      "Deploy a template using Azure CLI"
+    ],
+    quiz: [
+      {
+        q: "Every request to Azure (Portal, CLI, API) goes through which service?",
+        options: ["Azure Active Directory", "Azure Resource Manager (ARM)", "Azure Storage", "Azure Load Balancer"],
+        correct: 1,
+        explanation: "ARM is the front door for all Azure management operations. Whether you click a button in the portal or run a CLI command, ARM processes the request. It's the master orchestrator."
+      },
+      {
+        q: "What happens if you deploy an ARM template in Complete mode and a resource in the resource group is NOT in the template?",
+        options: ["Nothing — it's left alone", "The resource is DELETED", "The resource is archived", "The deployment fails"],
+        correct: 1,
+        explanation: "Complete mode makes the resource group match the template exactly — resources not in the template get DELETED. Incremental mode (the default) only adds/updates and leaves existing resources alone. Be very careful with Complete mode."
+      },
+      {
+        q: "ARM templates are 'declarative'. What does that mean?",
+        options: ["You describe step-by-step HOW to build resources", "You describe WHAT you want and Azure figures out the how", "You must deploy resources in a specific order", "You can only create one resource per template"],
+        correct: 1,
+        explanation: "Declarative means you state the desired end state, not the steps. It's like telling a contractor 'I want a 3-bedroom house with a pool' vs. 'First dig a foundation, then pour concrete...' Azure handles the sequencing."
+      },
+      {
+        q: "What is the relationship between Bicep and ARM templates?",
+        options: ["They are completely different technologies", "Bicep compiles down to ARM JSON — they produce the same result", "Bicep replaces ARM entirely", "Bicep is only for Kubernetes"],
+        correct: 1,
+        explanation: "Bicep is a friendlier language that compiles to ARM JSON. Think of it as TypeScript to JavaScript — nicer to write, same engine underneath."
+      },
+      {
+        q: "Running the same ARM template twice on the same resource group will:",
+        options: ["Create duplicate resources", "Fail with an error", "Update existing resources to match the template (idempotent)", "Delete and recreate all resources"],
+        correct: 2,
+        explanation: "ARM templates are idempotent — running them multiple times produces the same result. Existing resources are updated to match the template, not duplicated."
+      }
+    ]
+  },
+  {
+    id: 4,
+    number: "MODULE 04",
+    title: "Virtual Networking",
+    subtitle: "VNets, Subnets, NSGs & DNS",
+    difficulty: "intermediate",
+    analogy: "A Virtual Network (VNet) is like your office building's floor plan. The building itself is the VNet with its address range. Subnets are the individual rooms (accounting dept, engineering dept). Network Security Groups (NSGs) are the locked doors and security cameras — they control who can enter which room and what traffic flows where. DNS is the building's directory board in the lobby that tells visitors 'Accounting is on Floor 3, Room 305.'",
+    concepts: [
+      {
+        title: "Virtual Networks (VNets) & Subnets",
+        content: "A VNet is a logically isolated network in Azure. You define its IP address space (like 10.0.0.0/16), then carve it into subnets. Resources in the same VNet can communicate by default. Resources in different VNets cannot — they're isolated. Subnets let you segment traffic and apply different security rules to different groups of resources.",
+        keyTerms: ["Address Space", "CIDR Notation", "Subnet", "Private IP", "Public IP"],
+        tips: ["Azure reserves 5 IP addresses per subnet (first 4 and last 1).", "VNet address spaces should NOT overlap if you plan to peer them later.", "Plan your IP addressing scheme before building — it's hard to change later."],
+        warning: "Exam essential: Know CIDR notation. /16 = 65,536 addresses. /24 = 256 addresses. /28 = 16 addresses. Subtract 5 for Azure reserved IPs per subnet."
+      },
+      {
+        title: "Network Security Groups (NSGs)",
+        content: "NSGs are stateful firewalls that filter traffic with rules. Each rule has: priority (100-4096, lower = processed first), source, destination, port, protocol, and action (allow/deny). NSGs can be attached to subnets or individual NICs. Traffic is evaluated against rules in priority order — first match wins.",
+        keyTerms: ["Inbound Rules", "Outbound Rules", "Priority", "Allow", "Deny", "Service Tags"],
+        tips: ["Default rules allow VNet-to-VNet and outbound internet. Default DENIES inbound internet.", "Service Tags (like 'Internet', 'VirtualNetwork', 'AzureLoadBalancer') simplify rules.", "NSGs are stateful — if inbound traffic is allowed, the response is automatically allowed."]
+      },
+      {
+        title: "Application Security Groups (ASGs)",
+        content: "ASGs let you group VMs logically (like 'WebServers' or 'DatabaseServers') and reference those groups in NSG rules instead of IP addresses. This makes rules easier to manage — you don't need to update IPs when VMs change.",
+        tips: ["ASGs work alongside NSGs — they don't replace them.", "All NICs in an ASG must be in the same VNet."]
+      },
+      {
+        title: "Azure DNS",
+        content: "Azure DNS hosts your DNS zones and allows you to manage DNS records. Public DNS zones resolve names from the internet. Private DNS zones resolve names within your VNets. You can create A records (name → IP), CNAME records (name → name), MX records (mail), and more.",
+        keyTerms: ["DNS Zone", "Record Set", "A Record", "CNAME", "Private DNS Zone", "Virtual Network Link"],
+        tips: ["Azure DNS does NOT let you buy domain names — only host/manage them.", "Private DNS zones must be linked to VNets to work."]
+      }
+    ],
+    labTasks: [
+      "Create a virtual network with multiple subnets",
+      "Deploy a second VNet from an ARM template",
+      "Configure NSGs and ASGs for traffic filtering",
+      "Set up public and private Azure DNS zones"
+    ],
+    quiz: [
+      {
+        q: "You create a subnet with address range 10.0.1.0/24. How many usable IP addresses are available for your resources?",
+        options: ["256", "254", "251", "250"],
+        correct: 2,
+        explanation: "A /24 gives 256 total addresses. Azure reserves 5 per subnet: the network address (.0), Azure default gateway (.1), Azure DNS (.2 and .3), and the broadcast address (.255). That leaves 256 - 5 = 251 usable addresses."
+      },
+      {
+        q: "Two VMs in the same VNet but different subnets. Can they communicate by default?",
+        options: ["No — subnets are completely isolated", "Yes — resources in the same VNet can communicate by default", "Only if you create a VNet peering", "Only over the internet"],
+        correct: 1,
+        explanation: "Resources within the same VNet can communicate across subnets by default. VNets provide isolation from OTHER VNets, but within a VNet, traffic flows freely (unless an NSG blocks it)."
+      },
+      {
+        q: "An NSG has these inbound rules: Priority 100 - Deny Port 80, Priority 200 - Allow Port 80. What happens to HTTP traffic on port 80?",
+        options: ["Allowed — Allow rules take priority", "Denied — lower priority number (100) is evaluated first", "Both rules apply and cancel each other out", "The NSG throws an error"],
+        correct: 1,
+        explanation: "NSG rules are evaluated by priority number — LOWER number = HIGHER priority = evaluated first. The Deny at priority 100 fires before the Allow at 200. First match wins. It's like a bouncer with two lists — he checks the deny list first."
+      },
+      {
+        q: "What is the purpose of an Application Security Group (ASG)?",
+        options: ["To encrypt network traffic", "To logically group VMs so you can reference them in NSG rules by name instead of IP", "To load balance traffic across VMs", "To create VPN connections"],
+        correct: 1,
+        explanation: "ASGs let you tag VMs (like 'WebServers') and then write NSG rules that say 'Allow traffic FROM WebServers TO DatabaseServers on port 1433' — no IP addresses needed."
+      },
+      {
+        q: "Can Azure DNS be used to buy a domain name like 'mycompany.com'?",
+        options: ["Yes, Azure DNS includes domain registration", "No, Azure DNS only hosts/manages DNS zones — you buy domains elsewhere", "Yes, but only .azure.com domains", "Only through PowerShell"],
+        correct: 1,
+        explanation: "Azure DNS is for HOSTING, not purchasing. You buy your domain from a registrar (like GoDaddy), then point its nameservers to Azure DNS to manage the records."
+      }
+    ]
+  },
+  {
+    id: 5,
+    number: "MODULE 05",
+    title: "Intersite Connectivity",
+    subtitle: "VNet Peering, VPN Gateway & ExpressRoute",
+    difficulty: "intermediate",
+    analogy: "You have offices in New York and London. VNet Peering is like building a private bridge between two buildings on the same campus — fast, direct, no going through public roads. VPN Gateway is like an encrypted tunnel through the public internet — you're using public roads but inside a secure, armored truck. ExpressRoute is like leasing your own private highway — dedicated fiber that never touches the public internet.",
+    concepts: [
+      {
+        title: "VNet Peering",
+        content: "Peering connects two VNets so resources can communicate using private IPs. Traffic stays on Microsoft's backbone — never touches the public internet. You can peer VNets in the same region (VNet Peering) or across regions (Global VNet Peering). Peering is non-transitive: if VNet-A is peered with VNet-B, and VNet-B with VNet-C, VNet-A CANNOT reach VNet-C without its own peering.",
+        keyTerms: ["VNet Peering", "Global VNet Peering", "Non-transitive"],
+        tips: ["Peering must be configured from BOTH sides.", "Address spaces cannot overlap between peered VNets.", "Peering is NOT transitive — this is a top exam question."],
+        warning: "Exam trap: VNet Peering is NOT transitive. A↔B and B↔C does NOT mean A↔C. You need a separate peering or a hub-spoke topology with routing."
+      },
+      {
+        title: "VPN Gateway",
+        content: "A VPN Gateway sends encrypted traffic between Azure VNets or between Azure and on-premises networks over the public internet. Site-to-Site (S2S) connects your on-premises network. Point-to-Site (P2S) connects individual devices (like a laptop). VNet-to-VNet connects two Azure VNets via encrypted tunnel.",
+        keyTerms: ["Site-to-Site (S2S)", "Point-to-Site (P2S)", "VNet-to-VNet", "Gateway Subnet", "IKE"],
+        tips: ["VPN Gateway requires a dedicated 'GatewaySubnet'.", "Gateway deployment can take up to 45 minutes.", "P2S is great for remote workers connecting to Azure."]
+      },
+      {
+        title: "ExpressRoute",
+        content: "ExpressRoute provides a private, dedicated connection from on-premises to Azure through a connectivity provider. Traffic never goes over the public internet. It offers higher bandwidth (up to 100 Gbps), lower latency, and more reliability than VPN. It's the premium option for enterprises.",
+        keyTerms: ["ExpressRoute Circuit", "Peering Location", "Private Peering", "Microsoft Peering"],
+        tips: ["ExpressRoute does NOT encrypt traffic by default — add VPN on top if encryption is needed.", "Much more expensive than VPN Gateway — used for mission-critical workloads."]
+      },
+      {
+        title: "User-Defined Routes (UDRs)",
+        content: "Azure automatically routes traffic between subnets, VNets, and the internet. UDRs let you override these defaults. Common use: force all traffic through a firewall (Network Virtual Appliance) before it reaches its destination. This is called 'forced tunneling.'",
+        keyTerms: ["Route Table", "Next Hop", "Network Virtual Appliance (NVA)", "Forced Tunneling"]
+      }
+    ],
+    labTasks: [
+      "Deploy VMs in separate virtual networks",
+      "Test connectivity between VNets (should fail initially)",
+      "Configure VNet peering between the networks",
+      "Verify connectivity after peering"
+    ],
+    quiz: [
+      {
+        q: "VNet-A is peered with VNet-B. VNet-B is peered with VNet-C. Can VNet-A resources reach VNet-C?",
+        options: ["Yes — peering is transitive", "No — peering is NOT transitive", "Yes, but only with Global Peering", "Only if they're in the same region"],
+        correct: 1,
+        explanation: "VNet Peering is NOT transitive. A↔B and B↔C does NOT mean A↔C. You'd need to create a direct peering between A and C, or use a hub-spoke topology with routing."
+      },
+      {
+        q: "A remote developer needs to connect their laptop to your Azure VNet. Which VPN type is appropriate?",
+        options: ["Site-to-Site (S2S)", "Point-to-Site (P2S)", "ExpressRoute", "VNet Peering"],
+        correct: 1,
+        explanation: "Point-to-Site (P2S) connects individual client devices to Azure. Site-to-Site connects an entire on-premises network. P2S is perfect for remote workers or developers."
+      },
+      {
+        q: "Which connectivity option provides a private connection that NEVER traverses the public internet?",
+        options: ["VPN Gateway (Site-to-Site)", "VPN Gateway (Point-to-Site)", "ExpressRoute", "VNet Peering across regions"],
+        correct: 2,
+        explanation: "ExpressRoute uses a dedicated private connection through a connectivity provider — traffic never touches the public internet. VPN Gateway uses the public internet (encrypted)."
+      },
+      {
+        q: "Does ExpressRoute encrypt traffic by default?",
+        options: ["Yes — always encrypted", "No — encryption must be added separately", "Only for Microsoft Peering", "Only for connections over 1 Gbps"],
+        correct: 1,
+        explanation: "ExpressRoute does NOT encrypt by default — it's private but not encrypted. If you need encryption, you can layer a VPN over the ExpressRoute connection."
+      }
+    ]
+  },
+  {
+    id: 6,
+    number: "MODULE 06",
+    title: "Network Traffic Management",
+    subtitle: "Load Balancer & Application Gateway",
+    difficulty: "advanced",
+    analogy: "Imagine a popular restaurant with a long line. Azure Load Balancer is the host at the front door who says 'Table for two? Go to dining room A or B' — they distribute customers evenly across rooms based on simple rules. Application Gateway is the maître d' at a fancy restaurant who reads your reservation details: 'Ah, you ordered the vegetarian menu? Let me seat you in the special section' — it inspects the content of your request and routes accordingly.",
+    concepts: [
+      {
+        title: "Azure Load Balancer (Layer 4)",
+        content: "Load Balancer operates at Layer 4 (transport layer — TCP/UDP). It distributes incoming traffic across multiple VMs based on IP and port. It doesn't look at the content of the traffic, just where it's going. Use it for high-performance, low-latency scenarios. Public Load Balancer handles internet traffic; Internal Load Balancer handles private VNet traffic.",
+        keyTerms: ["Frontend IP", "Backend Pool", "Health Probe", "Load Balancing Rule", "SKU (Basic/Standard)"],
+        tips: ["Health Probes check if backend VMs are alive. Unhealthy VMs stop receiving traffic.", "Standard SKU is zone-redundant and recommended for production.", "Basic SKU is free but limited — being retired."]
+      },
+      {
+        title: "Application Gateway (Layer 7)",
+        content: "Application Gateway operates at Layer 7 (application layer — HTTP/HTTPS). It can inspect URLs, headers, and cookies to make routing decisions. Features include URL-based routing (/images → server pool A, /api → server pool B), SSL termination, Web Application Firewall (WAF), and cookie-based session affinity.",
+        keyTerms: ["Listener", "Routing Rule", "Backend Pool", "HTTP Settings", "WAF", "URL Path-Based Routing"],
+        tips: ["Application Gateway can terminate SSL, reducing encryption overhead on backend servers.", "WAF protects against OWASP top 10 threats (SQL injection, XSS, etc.).", "Use App Gateway for web apps; use Load Balancer for non-HTTP workloads."]
+      },
+      {
+        title: "Network Watcher",
+        content: "Network Watcher is Azure's network diagnostic and monitoring tool. It includes IP flow verify (check if traffic is allowed/denied), next hop (trace routing), packet capture, connection troubleshoot, and NSG flow logs. Essential for troubleshooting connectivity issues.",
+        keyTerms: ["IP Flow Verify", "Next Hop", "Connection Monitor", "NSG Flow Logs", "Packet Capture"]
+      }
+    ],
+    labTasks: [
+      "Deploy infrastructure using ARM template (VMs, NSGs, VNets)",
+      "Configure a public Azure Load Balancer with health probes",
+      "Configure an Azure Application Gateway with URL-based routing"
+    ],
+    quiz: [
+      {
+        q: "You need to distribute web traffic and route requests based on the URL path (/api vs /images). Which service should you use?",
+        options: ["Azure Load Balancer", "Azure Application Gateway", "Azure Traffic Manager", "Azure Front Door"],
+        correct: 1,
+        explanation: "Application Gateway operates at Layer 7 and can inspect HTTP content like URL paths. Load Balancer works at Layer 4 and only sees IP/port — it can't do URL-based routing."
+      },
+      {
+        q: "An Azure Load Balancer Health Probe detects that a VM is unhealthy. What happens?",
+        options: ["The VM is deleted", "Traffic stops being routed to that VM", "An alert email is sent", "The VM is automatically restarted"],
+        correct: 1,
+        explanation: "When a health probe marks a VM as unhealthy, the Load Balancer stops sending new traffic to it. Existing connections may drain. The VM isn't deleted or restarted — it just stops receiving new requests."
+      },
+      {
+        q: "Which tool would you use to check if an NSG rule is blocking traffic to a specific VM?",
+        options: ["Azure Monitor", "IP Flow Verify (Network Watcher)", "Azure Advisor", "Application Insights"],
+        correct: 1,
+        explanation: "IP Flow Verify in Network Watcher lets you test if traffic to/from a VM is allowed or denied, and shows you which NSG rule is responsible. It's the go-to troubleshooting tool for NSG issues."
+      },
+      {
+        q: "What layer of the OSI model does Azure Load Balancer operate at?",
+        options: ["Layer 3 (Network)", "Layer 4 (Transport)", "Layer 7 (Application)", "Layer 2 (Data Link)"],
+        correct: 1,
+        explanation: "Azure Load Balancer operates at Layer 4, making decisions based on TCP/UDP protocol, source/destination IP, and port numbers. Application Gateway operates at Layer 7."
+      }
+    ]
+  },
+  {
+    id: 7,
+    number: "MODULE 07",
+    title: "Azure Storage",
+    subtitle: "Blobs, Files, Security & Tiers",
+    difficulty: "intermediate",
+    analogy: "Azure Storage is like a giant warehouse with different sections. Blob Storage is the massive open floor where you dump boxes of any size — photos, videos, backups, logs (unstructured data). Azure Files is the organized filing cabinet system with labeled drawers and folders that your whole office can access simultaneously (like a shared network drive). Table Storage is rows of spreadsheets. Queue Storage is a conveyor belt that holds messages for processing.",
+    concepts: [
+      {
+        title: "Storage Account Overview",
+        content: "A Storage Account is the top-level container for all Azure Storage services. When you create one, you choose the performance tier (Standard HDD vs Premium SSD), redundancy option, and access tier. The account name must be globally unique, 3-24 characters, lowercase letters and numbers only.",
+        keyTerms: ["General-purpose v2 (GPv2)", "Standard", "Premium", "BlobStorage", "StorageV2"],
+        tips: ["General-purpose v2 is recommended for almost all scenarios.", "Storage account names are GLOBALLY unique across all of Azure.", "Premium storage uses SSDs — use for low-latency workloads."]
+      },
+      {
+        title: "Blob Storage & Access Tiers",
+        content: "Blob (Binary Large Object) storage holds unstructured data. Three access tiers: Hot (frequently accessed — highest storage cost, lowest access cost), Cool (infrequently accessed — lower storage, higher access, 30-day minimum), and Archive (rarely accessed — cheapest storage, most expensive to retrieve, hours to rehydrate). Blobs are organized in Containers.",
+        keyTerms: ["Block Blob", "Append Blob", "Page Blob", "Hot", "Cool", "Archive", "Container"],
+        tips: ["Archive tier can take up to 15 hours to rehydrate — plan ahead!", "Lifecycle management policies can auto-move blobs between tiers.", "Page blobs are used for VM disks (VHD files)."],
+        warning: "Exam hot topic: Know when to use each tier. Hot for active data, Cool for backups accessed monthly, Archive for compliance data kept for years."
+      },
+      {
+        title: "Storage Security",
+        content: "Secure storage with multiple methods: Access Keys (root passwords — two per account for rotation), Shared Access Signatures (SAS — time-limited, scoped tokens), Stored Access Policies (reusable SAS templates), Microsoft Entra ID authorization, and network restrictions (firewalls, private endpoints, service endpoints).",
+        keyTerms: ["Access Key", "SAS Token", "Stored Access Policy", "Service Endpoint", "Private Endpoint"],
+        tips: ["NEVER share access keys in code. Use SAS tokens or Managed Identities instead.", "SAS tokens can be scoped to specific services, resource types, and permissions.", "Private Endpoints give your storage a private IP inside your VNet."]
+      },
+      {
+        title: "Azure Files & Redundancy",
+        content: "Azure Files provides fully managed file shares accessible via SMB or NFS protocols. You can mount them on Windows, Linux, or macOS — it replaces on-premises file servers. Redundancy options: LRS (3 copies in one datacenter), ZRS (3 copies across availability zones), GRS (6 copies, 2 regions), RA-GRS (GRS + read access to secondary).",
+        keyTerms: ["SMB", "NFS", "LRS", "ZRS", "GRS", "RA-GRS", "GZRS"],
+        tips: ["Azure File Sync lets you cache Azure Files on an on-premises Windows Server.", "LRS is cheapest; GRS/RA-GRS protects against entire region failures."]
+      }
+    ],
+    labTasks: [
+      "Create and configure a storage account",
+      "Create a blob container and set access levels",
+      "Configure blob lifecycle management",
+      "Create and configure Azure Files shares",
+      "Configure network security for storage"
+    ],
+    quiz: [
+      {
+        q: "Your company stores compliance documents that are accessed once every 5 years. Which access tier is most cost-effective?",
+        options: ["Hot", "Cool", "Archive", "Premium"],
+        correct: 2,
+        explanation: "Archive is designed for data rarely accessed (think years). It has the lowest storage cost. The catch: retrieval takes hours and costs more. Perfect for compliance data you must keep but rarely read."
+      },
+      {
+        q: "You need to give a third-party contractor read access to a specific blob container for 24 hours. What should you use?",
+        options: ["Share the storage account access key", "Create a Shared Access Signature (SAS) token", "Create a new Azure AD user", "Make the container public"],
+        correct: 1,
+        explanation: "SAS tokens are perfect: time-limited, scoped to specific containers/permissions, and revocable. Sharing access keys gives full account access — way too much. Public access is a security risk."
+      },
+      {
+        q: "What does GRS redundancy provide?",
+        options: ["3 copies in one datacenter", "3 copies across availability zones", "6 copies — 3 in primary region + 3 in secondary region", "Unlimited copies worldwide"],
+        correct: 2,
+        explanation: "GRS (Geo-Redundant Storage) keeps 3 copies locally (LRS) AND asynchronously replicates 3 more copies to a paired region hundreds of miles away. Protects against entire region disasters."
+      },
+      {
+        q: "Azure Files uses which protocol to provide network file shares?",
+        options: ["HTTP/HTTPS only", "SMB (Server Message Block)", "FTP", "SFTP only"],
+        correct: 1,
+        explanation: "Azure Files supports SMB (the standard Windows file sharing protocol) and NFS. This means you can mount an Azure file share as a network drive on Windows, Linux, or macOS — just like a traditional file server."
+      },
+      {
+        q: "How many access keys does each storage account have, and why?",
+        options: ["One key for maximum security", "Two keys to enable key rotation without downtime", "Three keys for primary, secondary, and backup", "No keys — only Azure AD authentication"],
+        correct: 1,
+        explanation: "Two keys allow rotation: update your apps to use Key 2, then regenerate Key 1. Then update apps to Key 1 and regenerate Key 2. Zero downtime key rotation."
+      }
+    ]
+  },
+  {
+    id: 8,
+    number: "MODULE 08",
+    title: "Virtual Machines",
+    subtitle: "VMs, Scale Sets & Compute Management",
+    difficulty: "advanced",
+    analogy: "A Virtual Machine is like renting a fully furnished apartment instead of buying a house. You choose the size (studio, 1-bedroom, penthouse = VM sizes), the neighborhood (Azure region), and the building's safety features (availability sets/zones). Virtual Machine Scale Sets are like owning an apartment complex where new units automatically open when demand spikes and close when it drops — that's autoscaling.",
+    concepts: [
+      {
+        title: "VM Fundamentals",
+        content: "A VM is a software-based computer running on Azure hardware. You choose the OS (Windows/Linux), size (CPU, RAM, storage), region, and networking. VMs give you full control — you manage the OS, patches, and applications. They're IaaS (Infrastructure as a Service).",
+        keyTerms: ["VM Size/Series", "Availability Set", "Availability Zone", "Managed Disk", "NIC"],
+        tips: ["VM naming convention matters: include environment, location, workload, and instance number.", "VMs can be resized (vertical scaling) but may require a restart.", "B-series VMs are burstable and cost-effective for variable workloads."]
+      },
+      {
+        title: "Availability & Resilience",
+        content: "Availability Sets protect against hardware failures within a datacenter by spreading VMs across Fault Domains (separate racks) and Update Domains (groups that reboot sequentially during maintenance). Availability Zones protect against entire datacenter failures by placing VMs in physically separate zones within a region.",
+        keyTerms: ["Fault Domain", "Update Domain", "Availability Set", "Availability Zone"],
+        tips: ["Availability Zones give 99.99% SLA. Availability Sets give 99.95% SLA.", "You can't change the availability option after VM creation.", "Each Azure region with zones has at least 3 zones."],
+        warning: "Exam favorite: Know the difference between Availability Sets (rack-level protection within a datacenter) and Availability Zones (datacenter-level protection within a region)."
+      },
+      {
+        title: "VM Scale Sets (VMSS)",
+        content: "Scale Sets let you create and manage a group of identical VMs that automatically scale based on demand or schedule. You define a base image, and VMSS creates/destroys instances as needed. Perfect for web servers, batch processing, and microservices.",
+        keyTerms: ["Scale-in", "Scale-out", "Autoscale Rules", "Custom Autoscale", "Instance Count"],
+        tips: ["Scale Sets can scale from 0 to 1,000 instances.", "Autoscale rules trigger on metrics: CPU %, memory, queue length, custom metrics.", "Combine with Load Balancer for traffic distribution."]
+      },
+      {
+        title: "VM Extensions & Cloud-Init",
+        content: "Extensions are small agents that run post-deployment tasks: install software, configure antivirus, run scripts. The Custom Script Extension runs PowerShell or Bash scripts. Cloud-Init is the Linux equivalent for first-boot configuration. These automate configuration so you don't SSH into every VM manually.",
+        keyTerms: ["Custom Script Extension", "DSC Extension", "Cloud-Init", "Run Command"]
+      }
+    ],
+    labTasks: [
+      "Deploy zone-resilient VMs using the Azure portal",
+      "Manage compute and storage scaling for VMs",
+      "Create and configure Virtual Machine Scale Sets",
+      "Configure autoscaling rules",
+      "Create a VM using Azure PowerShell and CLI"
+    ],
+    quiz: [
+      {
+        q: "You need VMs that survive an entire datacenter going offline. What should you use?",
+        options: ["Availability Sets", "Availability Zones", "A single VM with Premium SSD", "VM Scale Sets"],
+        correct: 1,
+        explanation: "Availability Zones place VMs in physically separate datacenters within a region. If one datacenter goes down, VMs in other zones keep running. Availability Sets only protect against rack-level failures within ONE datacenter."
+      },
+      {
+        q: "Your web app sees 10x traffic during business hours and minimal traffic overnight. What's the best solution?",
+        options: ["Deploy enough VMs to handle peak load 24/7", "Use VM Scale Sets with autoscale rules based on CPU", "Manually add VMs each morning", "Use a single very large VM"],
+        correct: 1,
+        explanation: "VM Scale Sets with autoscale rules automatically add VMs when CPU is high (scale-out) and remove them when demand drops (scale-in). You only pay for what you use."
+      },
+      {
+        q: "What is a Fault Domain in an Availability Set?",
+        options: ["A separate Azure region", "A separate availability zone", "A separate physical server rack with independent power and network", "A virtual network segment"],
+        correct: 2,
+        explanation: "A Fault Domain represents a group of VMs sharing common hardware (rack, power, network switch). By spreading VMs across fault domains, a single rack failure doesn't take down all your VMs."
+      },
+      {
+        q: "You need to run a configuration script on 50 Azure VMs after deployment. What's the best approach?",
+        options: ["SSH/RDP into each VM individually", "Use the Custom Script Extension", "Redeploy all VMs with a new image", "Use Azure Policy to deny unconfigured VMs"],
+        correct: 1,
+        explanation: "The Custom Script Extension runs scripts on VMs automatically after (or during) deployment. It's designed exactly for this — no manual remote access needed."
+      }
+    ]
+  },
+  {
+    id: 9,
+    number: "MODULE 09",
+    title: "PaaS Compute — Web Apps & Containers",
+    subtitle: "App Service, Container Instances & Container Apps",
+    difficulty: "advanced",
+    analogy: "IaaS (VMs) is renting a bare apartment — you furnish and maintain it. PaaS is renting a fully furnished, managed apartment. Azure App Service is like WeWork: you just bring your code/laptop and everything else (OS, runtime, scaling, SSL) is handled for you. Container Instances are like food trucks — quick to deploy, self-contained, and disposable. Container Apps are like a food court managed by the mall — containers that auto-scale with built-in traffic management.",
+    concepts: [
+      {
+        title: "Azure App Service (Web Apps)",
+        content: "App Service is a fully managed platform for building web apps, REST APIs, and mobile backends. You deploy your code or container and Azure handles the infrastructure: OS patching, scaling, load balancing, and SSL certificates. It supports .NET, Java, Node.js, Python, PHP, and Ruby.",
+        keyTerms: ["App Service Plan", "Deployment Slot", "Autoscale", "Custom Domain", "SSL/TLS"],
+        tips: ["The App Service Plan determines pricing tier, compute size, and features available.", "Free and Shared tiers are for dev/test only — no SLA, no custom domains on Free.", "Standard tier and above support deployment slots, autoscale, and daily backups."]
+      },
+      {
+        title: "Deployment Slots",
+        content: "Slots let you deploy new versions of your app to a staging environment, test them, then SWAP the staging slot with production. The swap is instant (just routing changes) with zero downtime. If something breaks, you swap back. It's blue-green deployment built right in.",
+        keyTerms: ["Production Slot", "Staging Slot", "Swap", "Auto-Swap", "Slot Settings"],
+        tips: ["Some settings can be marked as 'slot sticky' — they stay with the slot during swaps (like connection strings for a test database).", "Auto-Swap automatically swaps to production when you deploy to staging."],
+        warning: "Exam key: Deployment slots are available in Standard tier and above. Not available in Free, Shared, or Basic."
+      },
+      {
+        title: "Azure Container Instances (ACI)",
+        content: "ACI is the fastest, simplest way to run a container in Azure. No VMs to manage, no orchestrator to configure. You specify a Docker image, CPU/memory, and it runs. Great for burst workloads, batch jobs, build agents, and simple apps. But it's per-container — no built-in scaling or orchestration.",
+        keyTerms: ["Container Group", "Docker Image", "Restart Policy", "Environment Variables"],
+        tips: ["ACI can start a container in seconds.", "Good for short-lived tasks, not long-running production services.", "Container groups can have multiple containers sharing the same lifecycle and network."]
+      },
+      {
+        title: "Azure Container Apps",
+        content: "Container Apps is a serverless container platform built on Kubernetes (but you don't manage the cluster). It supports autoscaling (including scale to zero), traffic splitting, built-in service discovery, and Dapr integration. Use it for microservices, event-driven apps, and APIs.",
+        keyTerms: ["Container App Environment", "Revision", "Ingress", "Scale Rules", "Dapr"],
+        tips: ["Container Apps can scale to zero — you pay nothing when idle.", "Supports traffic splitting between revisions for A/B testing.", "Simpler than AKS — no cluster management needed."]
+      }
+    ],
+    labTasks: [
+      "Create and configure an Azure Web App",
+      "Create and configure deployment slots",
+      "Swap deployment slots for zero-downtime deployment",
+      "Deploy an Azure Container Instance using a Docker image",
+      "Create and configure an Azure Container App"
+    ],
+    quiz: [
+      {
+        q: "You need zero-downtime deployments for your web app. What App Service feature enables this?",
+        options: ["Autoscale", "Deployment Slots", "Custom Domains", "Always On"],
+        correct: 1,
+        explanation: "Deployment Slots let you deploy to a staging slot, test it, then instantly swap it into production with zero downtime. If it fails, swap back. It's like having an understudy ready to go on stage."
+      },
+      {
+        q: "You need to run a quick batch job in a Docker container with minimal setup. Which service is best?",
+        options: ["Azure Virtual Machines", "Azure Kubernetes Service (AKS)", "Azure Container Instances (ACI)", "Azure App Service"],
+        correct: 2,
+        explanation: "ACI is perfect for quick, simple container workloads. No VM management, no orchestrator — just point it at a Docker image and go. Starts in seconds."
+      },
+      {
+        q: "Which App Service Plan tier do you need for Deployment Slots?",
+        options: ["Free", "Basic", "Standard (or above)", "Any tier"],
+        correct: 2,
+        explanation: "Deployment Slots require Standard tier or above. Free, Shared, and Basic tiers don't support them. This is a common exam question."
+      },
+      {
+        q: "Azure Container Apps can scale to zero instances. What does this mean for billing?",
+        options: ["You still pay the base fee", "You pay nothing when no containers are running", "You pay a minimum monthly charge", "Scale-to-zero is not supported"],
+        correct: 1,
+        explanation: "Container Apps' scale-to-zero capability means when there's no traffic, no containers run, and you're not billed for compute. You only pay when your app is actively handling requests."
+      }
+    ]
+  },
+  {
+    id: 10,
+    number: "MODULE 10",
+    title: "Data Protection",
+    subtitle: "Backup, Recovery & Disaster Recovery",
+    difficulty: "advanced",
+    analogy: "Azure Backup is like having a time machine for your data. If something goes wrong — ransomware, accidental deletion, hardware failure — you rewind to a healthy snapshot. Recovery Services Vault is the vault where your time machine stores all its snapshots. Azure Site Recovery is your disaster plan: if your entire building burns down (region fails), a replica of everything is already running in another city, ready to take over.",
+    concepts: [
+      {
+        title: "Azure Backup",
+        content: "Azure Backup provides simple, secure, and cost-effective solutions to back up your data and recover it from Azure. It supports VMs, SQL databases, file shares, and on-premises servers. Backups are stored in a Recovery Services Vault. You define backup policies (schedule, retention) and Azure handles the rest.",
+        keyTerms: ["Recovery Services Vault", "Backup Policy", "Recovery Point", "Instant Restore", "MARS Agent"],
+        tips: ["Recovery Services Vault must be in the same region as the resources it protects.", "VM backup captures the entire VM (OS + data disks) as a crash-consistent snapshot.", "Soft delete keeps deleted backup data for 14 additional days — protection against ransomware."]
+      },
+      {
+        title: "Backup Policies & Retention",
+        content: "Policies define how often to back up (daily, weekly) and how long to keep backups. You can configure different retention for daily, weekly, monthly, and yearly recovery points. A daily backup policy might keep dailies for 30 days, weeklies for 12 weeks, monthlies for 12 months, and yearlies for 10 years.",
+        tips: ["Standard policy backs up once per day. Enhanced policy supports multiple backups per day.", "Know the difference between crash-consistent and application-consistent snapshots."]
+      },
+      {
+        title: "Azure Site Recovery (ASR)",
+        content: "ASR replicates workloads from a primary site to a secondary location. If a disaster hits the primary, you failover to the secondary. It supports Azure-to-Azure, VMware-to-Azure, Hyper-V-to-Azure, and physical server scenarios. RPO (Recovery Point Objective) defines max data loss tolerance. RTO (Recovery Time Objective) defines max downtime tolerance.",
+        keyTerms: ["Replication", "Failover", "Failback", "RPO", "RTO", "Recovery Plan"],
+        tips: ["ASR replicates entire VMs, not just data.", "Test failovers let you verify your DR plan without impacting production.", "Recovery Plans automate the failover sequence and can include scripts."],
+        warning: "Exam tip: RPO = how much data can you afford to LOSE (measured in time). RTO = how long can you afford to be DOWN. Know these definitions cold."
+      }
+    ],
+    labTasks: [
+      "Create and configure a Recovery Services vault",
+      "Configure Azure VM-level backup policies",
+      "Monitor backup jobs and status",
+      "Enable virtual machine replication with Azure Site Recovery"
+    ],
+    quiz: [
+      {
+        q: "Your Recovery Services Vault is in East US. Can it back up VMs in West US?",
+        options: ["Yes — vaults can back up resources in any region", "No — the vault must be in the same region as the protected resources", "Yes, but only Premium vaults", "Only with a VPN connection"],
+        correct: 1,
+        explanation: "Recovery Services Vaults can only protect resources in the SAME region. If you have resources in multiple regions, you need a vault in each region."
+      },
+      {
+        q: "RPO of 4 hours means:",
+        options: ["Your systems will be restored within 4 hours of a disaster", "You can afford to lose up to 4 hours of data", "Backups run every 4 hours", "The failover takes 4 hours"],
+        correct: 1,
+        explanation: "RPO (Recovery Point Objective) is the maximum acceptable amount of DATA LOSS measured in time. RPO of 4 hours means your most recent recovery point is at most 4 hours old."
+      },
+      {
+        q: "Soft delete for Azure Backup keeps deleted backup data for how many additional days?",
+        options: ["7 days", "14 days", "30 days", "90 days"],
+        correct: 1,
+        explanation: "Soft delete retains deleted backup data for 14 additional days at no extra cost. This protects against accidental or malicious deletion (like ransomware)."
+      },
+      {
+        q: "You want to test your disaster recovery plan without affecting production. What feature should you use?",
+        options: ["Full failover", "Test failover", "Planned failover", "Forced failover"],
+        correct: 1,
+        explanation: "Test failover creates a replica in an isolated network for validation — it does NOT impact your production workloads or ongoing replication. Always test your DR plan!"
+      }
+    ]
+  },
+  {
+    id: 11,
+    number: "MODULE 11",
+    title: "Monitoring",
+    subtitle: "Azure Monitor, Alerts & Log Analytics",
+    difficulty: "advanced",
+    analogy: "Azure Monitor is like the dashboard in your car. It collects data from sensors throughout the vehicle (metrics from every Azure resource), shows you real-time gauges (dashboards), alerts you when something is wrong (check engine light = alert), and keeps a detailed trip log (Log Analytics) so you can investigate what happened during a road trip. Action Groups are your phone's emergency contacts — when the check engine light comes on, Azure Monitor knows exactly who to call.",
+    concepts: [
+      {
+        title: "Azure Monitor Overview",
+        content: "Azure Monitor is the centralized monitoring platform for all Azure resources. It collects two types of data: Metrics (numerical time-series data — CPU %, disk IOPS, request count) and Logs (structured event data — who did what, when, and where). Every Azure resource automatically generates metrics and activity logs.",
+        keyTerms: ["Metrics", "Logs", "Activity Log", "Diagnostic Settings", "Azure Monitor Agent"],
+        tips: ["Metrics are lightweight and near-real-time — great for dashboards and autoscale.", "Logs are richer and can be queried with KQL (Kusto Query Language).", "Activity Log captures control-plane operations (who created/deleted/modified resources)."]
+      },
+      {
+        title: "Log Analytics Workspace",
+        content: "Log Analytics is where you collect, store, and query log data. You send data from multiple sources (VMs, apps, Azure services) to a workspace, then use KQL to analyze it. Think of it as a data lake for all your monitoring data with a powerful search engine on top.",
+        keyTerms: ["KQL (Kusto Query Language)", "Workspace", "Data Retention", "Tables"],
+        tips: ["Free tier includes 5 GB of data per month and 31-day retention.", "KQL is NOT SQL — learn the basics: where, project, summarize, count, ago().", "Common KQL: Heartbeat | where TimeGenerated > ago(5m) | summarize count() by Computer"]
+      },
+      {
+        title: "Alerts & Action Groups",
+        content: "Alerts proactively notify you when conditions are met. You define: the target resource, the condition/signal (CPU > 80% for 5 minutes), and the action group (who to notify and how). Action Groups can send emails, SMS, push notifications, call webhooks, trigger Logic Apps, or create ITSM tickets.",
+        keyTerms: ["Alert Rule", "Signal", "Condition", "Action Group", "Severity (0-4)"],
+        tips: ["Severity 0 = Critical, Severity 4 = Verbose.", "Metric alerts evaluate metrics at regular intervals. Log alerts run KQL queries.", "Action Groups are reusable — one group can be attached to many alert rules."]
+      },
+      {
+        title: "Application Insights",
+        content: "Application Insights is an APM (Application Performance Management) tool that monitors live web apps. It detects anomalies, identifies performance bottlenecks, and helps diagnose issues. It integrates with your application code to capture request rates, response times, failure rates, dependencies, and user behavior.",
+        keyTerms: ["Telemetry", "Availability Test", "Smart Detection", "Application Map", "Live Metrics"]
+      }
+    ],
+    labTasks: [
+      "Deploy infrastructure using ARM templates",
+      "Create metric and log alert rules",
+      "Configure action group notifications",
+      "Trigger alerts and validate they work",
+      "Review Activity Log for audit events"
+    ],
+    quiz: [
+      {
+        q: "You need to get an email notification whenever VM CPU exceeds 90% for more than 5 minutes. What do you configure?",
+        options: ["Azure Policy", "An Alert Rule with a metric condition and Action Group", "A Network Security Group rule", "An ARM template deployment"],
+        correct: 1,
+        explanation: "Alert Rules define conditions (CPU > 90% for 5 min) and Action Groups define who to notify (email). Together, they create proactive monitoring."
+      },
+      {
+        q: "Which query language does Log Analytics use?",
+        options: ["SQL", "GraphQL", "KQL (Kusto Query Language)", "PowerShell"],
+        correct: 2,
+        explanation: "Log Analytics uses KQL — a read-only query language optimized for large volumes of telemetry data. It looks similar to SQL but has its own syntax."
+      },
+      {
+        q: "The Azure Activity Log records which type of events?",
+        options: ["Application-level errors and exceptions", "Control-plane management operations (create, delete, modify resources)", "Network packet captures", "VM performance metrics"],
+        correct: 1,
+        explanation: "The Activity Log captures management-plane (control-plane) operations: who created/deleted/modified Azure resources, when, and from where. It's your audit trail."
+      },
+      {
+        q: "An Action Group can do which of the following? (Multiple may be true, but pick the best answer)",
+        options: ["Only send emails", "Send emails, SMS, webhooks, Logic Apps, and ITSM tickets", "Only create Azure DevOps work items", "Only call an Azure Function"],
+        correct: 1,
+        explanation: "Action Groups are versatile: email, SMS, push notifications, voice calls, webhooks, Azure Functions, Logic Apps, ITSM connectors, and more. They're the notification hub."
+      }
+    ]
+  }
+];
+
+// ===========================
+// REACT APP
+// ===========================
+</script>
+<script src="deep-content.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useCallback, useMemo } = React;
+
+// ===== Icons =====
+const ArrowLeft = () => <span style={{fontSize:'1.1em'}}>←</span>;
+const CheckCircle = () => <span style={{color:'var(--accent-green)',fontSize:'1.1em'}}>✓</span>;
+const XCircle = () => <span style={{color:'var(--accent-red)',fontSize:'1.1em'}}>✗</span>;
+
+// ===== MAIN APP =====
+function App() {
+  const [view, setView] = useState('dashboard'); // dashboard | module | quiz | roadmap
+  const [activeModule, setActiveModule] = useState(null);
+  const [activeSection, setActiveSection] = useState('learn');
+  const [progress, setProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('az104_progress') || '{}'); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem('az104_progress', JSON.stringify(progress)); } catch {}
+  }, [progress]);
+
+  const markComplete = (moduleId, section) => {
+    setProgress(p => ({
+      ...p,
+      [moduleId]: { ...(p[moduleId]||{}), [section]: true }
+    }));
+  };
+
+  const getModuleProgress = (moduleId) => {
+    const mp = progress[moduleId] || {};
+    const total = 2; // learn + quiz
+    const done = (mp.learn ? 1 : 0) + (mp.quiz ? 1 : 0);
+    return Math.round((done / total) * 100);
+  };
+
+  const totalProgress = useMemo(() => {
+    const total = MODULES.length * 2;
+    let done = 0;
+    MODULES.forEach(m => {
+      const mp = progress[m.id] || {};
+      if (mp.learn) done++;
+      if (mp.quiz) done++;
+    });
+    return Math.round((done / total) * 100);
+  }, [progress]);
+
+  const completedModules = MODULES.filter(m => getModuleProgress(m.id) === 100).length;
+  const totalQuizzesPassed = MODULES.filter(m => (progress[m.id]||{}).quiz).length;
+
+  const openModule = (mod) => {
+    setActiveModule(mod);
+    setActiveSection('learn');
+    setView('module');
+  };
+
+  return (
+    <div>
+      <header className="header">
+        <div className="header-inner">
+          <div className="logo">
+            <div className="logo-icon">Az</div>
+            AZ-104 <span>// Study Platform</span>
+          </div>
+          <nav className="nav-tabs">
+            <button className={`nav-tab ${view==='dashboard'?'active':''}`} onClick={()=>setView('dashboard')}>Dashboard</button>
+            <button className={`nav-tab ${view==='roadmap'?'active':''}`} onClick={()=>setView('roadmap')}>Roadmap</button>
+          </nav>
+          <div className="progress-badge">{totalProgress}% Complete</div>
+        </div>
+      </header>
+      <main className="main">
+        {view === 'dashboard' && (
+          <Dashboard
+            modules={MODULES}
+            openModule={openModule}
+            totalProgress={totalProgress}
+            completedModules={completedModules}
+            totalQuizzesPassed={totalQuizzesPassed}
+            getModuleProgress={getModuleProgress}
+          />
+        )}
+        {view === 'module' && activeModule && (
+          <ModuleDetail
+            module={activeModule}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            onBack={() => setView('dashboard')}
+            markComplete={markComplete}
+            progress={progress[activeModule.id] || {}}
+            setView={setView}
+          />
+        )}
+        {view === 'roadmap' && <Roadmap completedModules={completedModules} />}
+      </main>
+    </div>
+  );
+}
+
+// ===== DASHBOARD =====
+function Dashboard({ modules, openModule, totalProgress, completedModules, totalQuizzesPassed, getModuleProgress }) {
+  return (
+    <div>
+      <div className="dashboard-hero">
+        <h1>Master Azure Administration</h1>
+        <p>A structured learning path from cloud fundamentals to confidently passing the AZ-104 exam. Built from the official Microsoft Learning labs.</p>
+      </div>
+      <div className="stats-row">
+        <div className="stat-card">
+          <div className="stat-number">{totalProgress}%</div>
+          <div className="stat-label">Overall Progress</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{completedModules}/{modules.length}</div>
+          <div className="stat-label">Modules Complete</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{totalQuizzesPassed}</div>
+          <div className="stat-label">Quizzes Passed</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-number">{modules.reduce((sum, m) => sum + m.quiz.length, 0)}</div>
+          <div className="stat-label">Practice Questions</div>
+        </div>
+      </div>
+      <div className="modules-grid">
+        {modules.map(m => (
+          <div key={m.id} className="module-card" onClick={() => openModule(m)}>
+            <div className="module-number">{m.number}</div>
+            <h3>{m.title}</h3>
+            <p>{m.subtitle}</p>
+            <div className="module-meta">
+              <span className={`module-difficulty diff-${m.difficulty}`}>{m.difficulty}</span>
+              <div className="module-progress-bar">
+                <div className="module-progress-fill" style={{width: getModuleProgress(m.id)+'%'}} />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ===== MODULE DETAIL =====
+function ModuleDetail({ module, activeSection, setActiveSection, onBack, markComplete, progress, setView }) {
+  return (
+    <div className="module-detail">
+      <button className="back-btn" onClick={onBack}>
+        <ArrowLeft /> Back to Dashboard
+      </button>
+      <div className="module-header">
+        <div className="module-number">{module.number}</div>
+        <h1>{module.title}</h1>
+        <p style={{color:'var(--text-secondary)', fontSize:'1.05rem', marginTop:'4px'}}>{module.subtitle}</p>
+        {module.examWeight && (
+          <div style={{marginTop:'10px', display:'inline-block', padding:'6px 14px', borderRadius:'8px', background:'rgba(168,85,247,0.1)', border:'1px solid rgba(168,85,247,0.2)', fontFamily:"'JetBrains Mono', monospace", fontSize:'0.75rem', color:'var(--accent-purple)'}}>
+            📊 {module.examWeight}
+          </div>
+        )}
+        <div className="analogy-box">
+          <div className="label">🌎 Real-World Analogy</div>
+          <p>{module.analogy}</p>
+        </div>
+      </div>
+
+      <div className="section-tabs">
+        <button className={`section-tab ${activeSection==='learn'?'active':''}`} onClick={()=>setActiveSection('learn')}>
+          📖 Learn {progress.learn ? '✓' : ''}
+        </button>
+        <button className={`section-tab ${activeSection==='lab'?'active':''}`} onClick={()=>setActiveSection('lab')}>
+          🔬 Lab Tasks
+        </button>
+        <button className={`section-tab ${activeSection==='quiz'?'active':''}`} onClick={()=>setActiveSection('quiz')}>
+          🎯 Quiz {progress.quiz ? '✓' : ''}
+        </button>
+      </div>
+
+      {activeSection === 'learn' && (
+        <LearnSection module={module} markComplete={() => markComplete(module.id, 'learn')} isComplete={progress.learn} />
+      )}
+      {activeSection === 'lab' && <LabSection module={module} />}
+      {activeSection === 'quiz' && (
+        <QuizSection module={module} markComplete={() => markComplete(module.id, 'quiz')} isComplete={progress.quiz} />
+      )}
+    </div>
+  );
+}
+
+// ===== LEARN SECTION =====
+function LearnSection({ module, markComplete, isComplete }) {
+  return (
+    <div className="content-section">
+      {module.concepts.map((c, i) => (
+        <div key={i} className="concept-block">
+          <h3>{c.title}</h3>
+          {c.content.split('\n\n').map((para, pi) => (
+            <p key={pi} style={{marginBottom: pi < c.content.split('\n\n').length - 1 ? '12px' : '0'}}>{para}</p>
+          ))}
+          {c.keyTerms && (
+            <div style={{marginTop:'12px', display:'flex', flexWrap:'wrap', gap:'6px'}}>
+              {c.keyTerms.map((t,j) => <span key={j} className="key-term">{t}</span>)}
+            </div>
+          )}
+          {c.tips && c.tips.map((tip,j) => (
+            <div key={j} className="tip-box">
+              <div className="tip-label">💡 Exam Tip</div>
+              <p style={{color:'var(--text-secondary)', fontSize:'0.9rem'}}>{tip}</p>
+            </div>
+          ))}
+          {c.warning && (
+            <div className="warning-box">
+              <div className="warn-label">⚠️ Exam Alert</div>
+              <p style={{color:'var(--text-secondary)', fontSize:'0.9rem'}}>{c.warning}</p>
+            </div>
+          )}
+        </div>
+      ))}
+      {!isComplete && (
+        <button className="quiz-btn quiz-btn-primary" onClick={markComplete} style={{marginTop:'1rem'}}>
+          ✓ Mark Learning Complete
+        </button>
+      )}
+      {isComplete && (
+        <div style={{marginTop:'1rem', color:'var(--accent-green)', fontWeight:600, display:'flex', alignItems:'center', gap:'8px'}}>
+          <CheckCircle /> Learning Complete
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== LAB SECTION =====
+function LabSection({ module }) {
+  return (
+    <div className="content-section">
+      <h3 style={{color:'var(--accent-cyan)', marginBottom:'1rem'}}>Hands-On Lab Tasks</h3>
+      <p style={{color:'var(--text-secondary)', marginBottom:'1.5rem', lineHeight:'1.6'}}>
+        These are the hands-on tasks from the official Microsoft AZ-104 lab. To practice these, you'll need an Azure subscription (a free trial works for most labs).
+      </p>
+      {module.labTasks.map((task, i) => (
+        <div key={i} style={{
+          display:'flex', gap:'12px', alignItems:'flex-start', padding:'14px',
+          background:'var(--bg-secondary)', borderRadius:'10px', marginBottom:'8px',
+          border:'1px solid var(--border)'
+        }}>
+          <span style={{
+            fontFamily:"'JetBrains Mono', monospace", fontSize:'0.8rem',
+            color:'var(--accent-purple)', background:'rgba(168,85,247,0.1)',
+            padding:'4px 10px', borderRadius:'6px', flexShrink:0
+          }}>Task {i+1}</span>
+          <span style={{color:'var(--text-secondary)', fontSize:'0.95rem'}}>{task}</span>
+        </div>
+      ))}
+      <div className="tip-box" style={{marginTop:'1.5rem'}}>
+        <div className="tip-label">🔗 Practice Resource</div>
+        <p style={{color:'var(--text-secondary)', fontSize:'0.9rem'}}>
+          Visit <strong>microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator</strong> for the full step-by-step lab instructions with screenshots.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ===== QUIZ SECTION =====
+function QuizSection({ module, markComplete, isComplete }) {
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [answers, setAnswers] = useState([]);
+
+  const questions = module.quiz;
+  const q = questions[current];
+  const letters = ['A','B','C','D'];
+
+  const handleSelect = (idx) => {
+    if (showAnswer) return;
+    setSelected(idx);
+  };
+
+  const handleCheck = () => {
+    if (selected === null) return;
+    setShowAnswer(true);
+    if (selected === q.correct) {
+      setScore(s => s + 1);
+    }
+    setAnswers(a => [...a, { selected, correct: q.correct }]);
+  };
+
+  const handleNext = () => {
+    if (current < questions.length - 1) {
+      setCurrent(c => c + 1);
+      setSelected(null);
+      setShowAnswer(false);
+    } else {
+      setFinished(true);
+      const finalScore = score + (selected === q.correct ? 0 : 0); // score already updated
+      const pct = Math.round((score / questions.length) * 100);
+      if (pct >= 70) markComplete();
+    }
+  };
+
+  const restart = () => {
+    setCurrent(0); setSelected(null); setShowAnswer(false); setScore(0); setFinished(false); setAnswers([]);
+  };
+
+  if (finished) {
+    const pct = Math.round((score / questions.length) * 100);
+    const passed = pct >= 70;
+    return (
+      <div className="score-card">
+        <div className={`score-value ${passed?'pass':'fail'}`}>{pct}%</div>
+        <div className="score-message">
+          {passed ? '🎉 Passed! You scored ' + score + '/' + questions.length + '. Great job!' : '📚 You scored ' + score + '/' + questions.length + '. Need 70% to pass. Review and try again!'}
+        </div>
+        <div style={{marginTop:'1.5rem', display:'flex', gap:'12px', justifyContent:'center'}}>
+          <button className="quiz-btn quiz-btn-secondary" onClick={restart}>Retake Quiz</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="quiz-container">
+      <div className="quiz-question">
+        <div className="quiz-progress">Question {current+1} of {questions.length} • Score: {score}/{current}</div>
+        <h3>{q.q}</h3>
+        <div className="quiz-options">
+          {q.options.map((opt, i) => {
+            let cls = 'quiz-option';
+            if (showAnswer && i === q.correct) cls += ' correct';
+            else if (showAnswer && i === selected && i !== q.correct) cls += ' incorrect';
+            else if (!showAnswer && i === selected) cls += ' selected';
+            return (
+              <div key={i} className={cls} onClick={() => handleSelect(i)}>
+                <span className="letter">{letters[i]}</span>
+                <span>{opt}</span>
+              </div>
+            );
+          })}
+        </div>
+        {showAnswer && (
+          <div className="quiz-explanation">
+            <strong>{selected === q.correct ? '✅ Correct!' : '❌ Incorrect.'}</strong> {q.explanation}
+          </div>
+        )}
+        <div style={{display:'flex', gap:'12px', marginTop:'1rem'}}>
+          {!showAnswer && (
+            <button className="quiz-btn quiz-btn-primary" onClick={handleCheck} disabled={selected===null}
+              style={{opacity: selected===null ? 0.5 : 1}}>
+              Check Answer
+            </button>
+          )}
+          {showAnswer && (
+            <button className="quiz-btn quiz-btn-primary" onClick={handleNext}>
+              {current < questions.length - 1 ? 'Next Question →' : 'See Results'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== ROADMAP =====
+function Roadmap({ completedModules }) {
+  const phases = [
+    {
+      label: 'PHASE 1 — CLOUD FOUNDATIONS',
+      title: 'Learn What "The Cloud" Even Means',
+      desc: 'Modules 1-2: Identity, Governance, Subscriptions. Start from zero — understand Azure\'s structure before touching resources.',
+      modules: [1,2]
+    },
+    {
+      label: 'PHASE 2 — BUILDING BLOCKS',
+      title: 'Deploy & Automate Resources',
+      desc: 'Module 3: ARM Templates & Infrastructure as Code. Learn to describe what you want and let Azure build it.',
+      modules: [3]
+    },
+    {
+      label: 'PHASE 3 — NETWORKING',
+      title: 'Connect Everything Together',
+      desc: 'Modules 4-6: VNets, Subnets, NSGs, Peering, VPNs, Load Balancers. This is the biggest section on the exam.',
+      modules: [4,5,6]
+    },
+    {
+      label: 'PHASE 4 — DATA & COMPUTE',
+      title: 'Store Data & Run Workloads',
+      desc: 'Modules 7-9: Storage accounts, blobs, VMs, Scale Sets, Web Apps, Containers. The core of Azure administration.',
+      modules: [7,8,9]
+    },
+    {
+      label: 'PHASE 5 — PROTECT & MONITOR',
+      title: 'Backup, Recover & Watch Everything',
+      desc: 'Modules 10-11: Azure Backup, Site Recovery, Monitor, Alerts. The last miles before exam readiness.',
+      modules: [10,11]
+    },
+    {
+      label: '🎯 EXAM READY',
+      title: 'Take the AZ-104 Exam',
+      desc: 'All modules complete, all quizzes passed. You understand Azure from the ground up. Schedule your exam with confidence.',
+      modules: []
+    }
+  ];
+
+  return (
+    <div style={{maxWidth:'800px', margin:'0 auto'}}>
+      <h1 style={{fontSize:'2rem', fontWeight:800, letterSpacing:'-1px', marginBottom:'0.5rem'}}>
+        Your Learning Roadmap
+      </h1>
+      <p style={{color:'var(--text-secondary)', marginBottom:'2rem', lineHeight:'1.6'}}>
+        A structured path from "what is the cloud?" to confidently passing the AZ-104 exam. Follow the phases in order — each builds on the last.
+      </p>
+      <div className="roadmap-container">
+        <div className="roadmap-line" />
+        {phases.map((p, i) => {
+          const isComplete = p.modules.length > 0 && p.modules.every(mid => completedModules >= mid);
+          return (
+            <div key={i} className="roadmap-item">
+              <div className={`roadmap-dot ${isComplete ? 'complete' : ''}`} />
+              <div className="phase-label">{p.label}</div>
+              <h3>{p.title}</h3>
+              <p>{p.desc}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ===== RENDER =====
+ReactDOM.render(<App />, document.getElementById('app'));
+</script>
+</body>
+</html>
