@@ -411,13 +411,81 @@ body::after {
 }
 
 .key-term {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: rgba(0,229,255,0.08);
   color: var(--accent-cyan);
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.key-term:hover {
+  background: rgba(0,229,255,0.15);
+  border-color: rgba(0,229,255,0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,229,255,0.1);
+}
+
+.key-term:active { transform: translateY(0); }
+
+.key-term .arrow {
+  font-size: 0.6rem;
+  transition: transform 0.2s;
+  opacity: 0.6;
+}
+
+.key-term .arrow.open { transform: rotate(90deg); }
+
+.key-term-expanded {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(0,229,255,0.04), rgba(77,124,255,0.04));
+  border: 1px solid rgba(0,229,255,0.12);
+  border-radius: 10px;
+  animation: termSlideIn 0.25s ease;
+}
+
+@keyframes termSlideIn {
+  from { opacity: 0; max-height: 0; padding: 0 16px; margin-top: 0; }
+  to { opacity: 1; max-height: 500px; padding: 14px 16px; margin-top: 8px; }
+}
+
+.key-term-expanded .term-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key-term-expanded .term-explain {
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.key-term-expanded .term-analogy {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(168,85,247,0.06);
+  border-left: 2px solid var(--accent-purple);
+  border-radius: 0 6px 6px 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  font-style: italic;
 }
 
 .tip-box {
@@ -1409,6 +1477,364 @@ const ArrowLeft = () => <span style={{fontSize:'1.1em'}}>←</span>;
 const CheckCircle = () => <span style={{color:'var(--accent-green)',fontSize:'1.1em'}}>✓</span>;
 const XCircle = () => <span style={{color:'var(--accent-red)',fontSize:'1.1em'}}>✗</span>;
 
+// ===== GLOSSARY — Layman Definitions =====
+const GLOSSARY = {
+  "Tenant": {
+    explain: "Your organization's private, dedicated space inside Microsoft Entra ID. When your company signs up for Azure, it gets one tenant. All your users, groups, and apps live inside this tenant.",
+    analogy: "Think of it like your apartment in a huge apartment building. Microsoft Entra ID is the building — your tenant is YOUR apartment. Your neighbor (another company) has their own apartment. You can't see their stuff, they can't see yours."
+  },
+  "User Principal Name (UPN)": {
+    explain: "The username people use to sign into Azure. It looks like an email address: jesse@yourcompany.onmicrosoft.com (or jesse@yourcompany.com if you've added a custom domain). Every user gets a unique UPN.",
+    analogy: "It's your building access badge number, but written as a name. It's how the security desk identifies you specifically among thousands of people."
+  },
+  "Service Principal": {
+    explain: "An identity for an APPLICATION or automated service (not a human). When your app needs to access Azure resources, it authenticates as a Service Principal instead of as a person. Has its own credentials (certificate or secret).",
+    analogy: "Like a robot employee with its own badge. The robot needs access to the supply room, but it's not a person — so it gets a special robot badge (Service Principal) instead of a human one."
+  },
+  "Managed Identity": {
+    explain: "A special, auto-managed Service Principal that Azure creates and handles for you. You never see passwords or certificates — Azure rotates them automatically. Comes in two flavors: System-assigned (tied to one resource, deleted with it) and User-assigned (standalone, shared across resources).",
+    analogy: "Instead of giving your robot employee a badge and making IT manage it, the building automatically gives the robot a badge, rotates the code weekly, and revokes it if the robot is decommissioned. Zero effort from you."
+  },
+  "OAuth 2.0": {
+    explain: "An authorization protocol that Entra ID uses to grant apps access to resources without sharing passwords. When you click 'Sign in with Microsoft', that's OAuth 2.0 working behind the scenes. It issues tokens (like temporary passes) instead of sharing your actual password.",
+    analogy: "Instead of giving a valet your house key to park your car, you give them a VALET key that only starts the engine — can't open the trunk or glove box. OAuth gives limited, temporary access without sharing your real credentials."
+  },
+  "OpenID Connect": {
+    explain: "A layer on top of OAuth 2.0 that handles AUTHENTICATION (proving WHO you are). OAuth handles authorization (what you can do), OpenID Connect adds the identity part. When you log in and see your name/email displayed, that's OpenID Connect.",
+    analogy: "OAuth is the valet key (access). OpenID Connect is the driver's license that proves who you are. Together, the app knows WHO you are AND what you're allowed to do."
+  },
+  "SAML": {
+    explain: "Security Assertion Markup Language — an older authentication protocol commonly used for enterprise single sign-on (SSO). When you click one button to log into Salesforce, ServiceNow, and other business apps via your company credentials, that's often SAML.",
+    analogy: "An older-style paper letter of introduction: 'This person is Jesse from Korb Satellite Solutions. He's authorized to access Room 5.' The letter (SAML assertion) is signed by your company's seal so the other party trusts it."
+  },
+  "Microsoft Graph API": {
+    explain: "The single REST API endpoint that lets you programmatically access virtually ALL Microsoft cloud data: users, groups, emails, calendars, Teams chats, files, and more. Everything at https://graph.microsoft.com. It's how apps talk to Entra ID, Microsoft 365, and other services.",
+    analogy: "One universal phone number to reach ANY department in the building. Need user info? Call Graph. Need email? Call Graph. Need Teams data? Same number. One endpoint to rule them all."
+  },
+  "Object ID": {
+    explain: "A globally unique identifier (GUID) assigned to every object in Entra ID — users, groups, apps, service principals. It looks like: 7b2f1a3d-4e5f-6789-abcd-ef0123456789. Used in scripts, APIs, and policies to reference specific objects.",
+    analogy: "Like a Social Security number for Azure objects — a permanent, unique ID that never changes, even if the display name changes."
+  },
+  "Cloud User": {
+    explain: "A user account created directly in Entra ID (the cloud). Not synced from anywhere. You manage it entirely in the Azure portal or via Graph API. Their password, profile, and lifecycle are all cloud-managed.",
+    analogy: "A resident who moved directly into the apartment (cloud) — never had a house somewhere else. All their mail, keys, and records are managed by the apartment building."
+  },
+  "Guest User": {
+    explain: "An external user invited to your Entra ID tenant via B2B collaboration. They authenticate with THEIR OWN identity (their company's credentials or a personal Microsoft/Google account). You control what they can ACCESS in your tenant, but not their password.",
+    analogy: "A visitor with a guest pass. They show their own driver's license (their identity) at the front desk, and you give them a guest badge that opens only certain doors. When they leave your building, you revoke the guest pass — but their license is still theirs."
+  },
+  "Dynamic Group": {
+    explain: "A group where membership is automatically managed by RULES based on user/device attributes. Example rule: 'Everyone whose department equals Engineering automatically joins.' When someone's department changes, they're auto-removed. Requires Entra ID P1.",
+    analogy: "A smart mailing list that auto-adds people who match the criteria and removes those who don't. Like a VIP section at a club that auto-opens the rope for anyone wearing a wristband, and closes it when they take it off."
+  },
+  "Assigned Group": {
+    explain: "A group where an admin manually adds and removes members. Simple and direct — you pick who's in, you pick who's out. No automation.",
+    analogy: "A regular guest list where someone physically writes names in and crosses them out."
+  },
+  "Dynamic Device membership": {
+    explain: "Same concept as Dynamic User groups, but based on device attributes (OS version, manufacturer, compliance state, etc.) instead of user attributes. Useful for targeting policies at specific types of devices.",
+    analogy: "Auto-sorting parking spots: all Teslas go to charging section A, all trucks to section B — based on the vehicle's attributes, not the driver."
+  },
+  "Free Edition": {
+    explain: "The base tier of Entra ID, included free with any Azure subscription or Microsoft 365 plan. Gives you: basic user and group management, single sign-on to cloud apps, basic security reports, and self-service password change (not reset). Limited to 500,000 directory objects. Does NOT include Dynamic Groups, Conditional Access, or SSPR.",
+    analogy: "The free floor plan of the building — you get a basic apartment with a bed, bathroom, and kitchen. No gym, no pool, no concierge. Good enough to get started, but you'll want to upgrade for serious use."
+  },
+  "P1 (Premium 1)": {
+    explain: "The mid-tier Entra ID license that unlocks most enterprise features. Adds: Dynamic Groups, Conditional Access policies, Self-Service Password Reset (including writeback to on-premises AD), Application Proxy, Group-based license assignment, Microsoft Entra Connect Health monitoring, and Administrative Units. This is the sweet spot for most organizations.",
+    analogy: "The upgraded apartment — now you get the gym, the pool, and a concierge desk. Conditional Access is the concierge who checks conditions before letting you in ('Are you on the approved list? Is it during business hours? Are you using a trusted device?')."
+  },
+  "P2 (Premium 2)": {
+    explain: "The top-tier Entra ID license. Everything in P1 PLUS: Identity Protection (auto-detects risky sign-ins like impossible travel, leaked credentials, anonymous IPs), Privileged Identity Management / PIM (just-in-time admin access with approval workflows — admins don't have permanent access), and Access Reviews (periodic reviews: 'Does Jesse still need Owner access? Let's check.').",
+    analogy: "The penthouse. You get everything from P1 plus 24/7 security cameras analyzing suspicious behavior (Identity Protection), a vault that only opens with a key AND a time-limited code AND manager approval (PIM), and a quarterly audit where someone checks if every resident still belongs (Access Reviews)."
+  },
+  "Group-based licensing": {
+    explain: "Instead of assigning licenses to users one-by-one, you assign a license to a GROUP. When a user joins the group, they auto-get the license. When they leave, the license is freed up. Requires P1. Massively simplifies license management at scale.",
+    analogy: "Instead of handing out gym memberships individually, you say 'Everyone in the Engineering department automatically gets a gym pass.' New hires get it day one. People who transfer out lose it automatically."
+  },
+  "Usage Location": {
+    explain: "A required two-letter country code (like 'US', 'GB', 'DE') set on each user account that tells Azure where the user will consume services. Required for license assignment — without it, you literally CANNOT assign licenses. Some services aren't available in all countries, so this determines what's available.",
+    analogy: "Your mailing address for the apartment. The building can't deliver your mail (license) if they don't know which country you're in. Set it to 'US' and suddenly you can receive American channels."
+  },
+  "Conditional Access = P1": {
+    explain: "Conditional Access is an Entra ID feature (P1 required) that applies if/then policies to sign-ins. IF a condition is met (user is off-network, on an unmanaged device, or signing in from a risky location), THEN require extra verification (MFA), block access, or limit what they can do. It's the zero-trust engine of Azure.",
+    analogy: "The smart security guard. Regular badge scan gets you in from the lobby (trusted location). But if you're entering from the fire escape at 2 AM (untrusted location/time), the guard says: 'Whoa — show me two more forms of ID before I let you in.' That's Conditional Access."
+  },
+  "PIM = P2": {
+    explain: "Privileged Identity Management (PIM) is a P2 feature that enforces just-in-time admin access. Instead of permanent Global Admin roles, admins 'activate' their role when needed for a limited time (e.g., 4 hours), optionally requiring approval and MFA. When the time expires, the role is deactivated. Audit trails track everything.",
+    analogy: "Instead of giving the bank vault key to every bank manager permanently, they have to REQUEST the key, get their boss's approval, and return it after 4 hours. A security camera logs every second they had it. That's PIM."
+  },
+  "Subscription": {
+    explain: "An Azure subscription is a billing and access control boundary. Each subscription gets its own invoice. It contains resource groups and resources. One Entra ID tenant can have many subscriptions. Common patterns: separate subscriptions for dev/test/prod, or per department, or per project.",
+    analogy: "Like having multiple credit cards under your name. Each card (subscription) has its own bill, spending limit, and authorized users. You might use one card for personal expenses and another for business."
+  },
+  "Management Group": {
+    explain: "A container ABOVE subscriptions that lets you organize multiple subscriptions into a hierarchy. You can apply RBAC roles and Azure Policies at the management group level, and they INHERIT down to all subscriptions beneath it. Supports up to 6 levels deep (plus root). Max 10,000 management groups per tenant.",
+    analogy: "The corporate org chart above individual stores. Corporate headquarters (root management group) sets company-wide rules. Regional offices (child management groups) can add their own rules. Individual stores (subscriptions) inherit all rules from above."
+  },
+  "Resource Group": {
+    explain: "A logical container that holds related Azure resources (VMs, storage accounts, databases) that share the same lifecycle. Delete the group = delete everything inside. A resource can only be in ONE resource group. The group has a location (for metadata only — resources inside can be in different regions).",
+    analogy: "A labeled box in your storage unit. The 'Kitchen' box has all kitchen items. Throw away the box, everything inside goes too. Each item can only be in one box."
+  },
+  "Scope": {
+    explain: "The LEVEL at which a role or policy is applied. From broadest to narrowest: Management Group → Subscription → Resource Group → Individual Resource. Permissions INHERIT downward — Reader at a subscription means Reader on everything in every resource group and resource below it.",
+    analogy: "Like a building pass that works on different levels. A pass for the whole building (Management Group) opens every floor and every room. A pass for just Floor 3 (Resource Group) only works on that floor."
+  },
+  "Owner": {
+    explain: "The most powerful built-in RBAC role. Full access to ALL resources in the scope AND can assign roles to other users. Basically god-mode. Use sparingly — only for subscription admins and top-level managers.",
+    analogy: "The building owner. They can go anywhere, change anything, AND give other people keys. The only person who can hand out and revoke badges."
+  },
+  "Contributor": {
+    explain: "Full access to create, modify, and delete ALL resources in the scope, but CANNOT assign roles to other people. This is the key difference from Owner. A Contributor can build anything but can't give other people access.",
+    analogy: "The general contractor. Can build rooms, knock down walls, install plumbing — but can't hand out building keys to other workers. That's the Owner's job."
+  },
+  "Reader": {
+    explain: "View-only access. Can see all resources and their configurations but cannot change anything. Cannot create, delete, or modify. Perfect for auditors, stakeholders, and observers who need visibility without risk.",
+    analogy: "A guided tour group. You can look through the glass windows at everything in the building, read all the signs, but you can't touch, move, or change anything."
+  },
+  "User Access Administrator": {
+    explain: "Can manage role assignments (give/revoke access to others) but CANNOT manage resources themselves. Paired with Contributor, this is effectively equivalent to Owner. Used when you need to separate 'who manages access' from 'who manages resources.'",
+    analogy: "The HR manager who hands out and revokes building badges but doesn't actually do any construction work themselves."
+  },
+  "Custom Role": {
+    explain: "A role you create from scratch (or clone from a built-in role) when no built-in role matches your needs. Defined in JSON with Actions (allowed operations), NotActions (excluded operations), DataActions (data-level operations), and AssignableScopes (where it can be used). Up to 5,000 custom roles per tenant.",
+    analogy: "A custom-cut key that only opens the specific doors you choose — not a master key (Owner) or a pre-made floor key (built-in role), but one tailored exactly to what this specific person needs."
+  },
+  "Policy Definition": {
+    explain: "A JSON rule that describes WHAT to evaluate and WHAT to do when a resource is non-compliant. Example: 'If a resource doesn't have a CostCenter tag, deny its creation.' Azure has hundreds of built-in definitions, or you can write your own.",
+    analogy: "A written rule in the building code: 'Every apartment MUST have a smoke detector. If a new apartment is built without one, the building inspector (Azure) will either block it (Deny) or install one automatically (DeployIfNotExists).'"
+  },
+  "Initiative": {
+    explain: "A COLLECTION of related policy definitions bundled together. Instead of assigning 20 individual policies, you assign one initiative containing all 20. Example: 'CIS Microsoft Azure Foundations Benchmark' initiative includes dozens of security policies. Much easier to manage.",
+    analogy: "A building code BOOK instead of individual pages. The 'Fire Safety Initiative' contains rules about sprinklers, smoke detectors, fire exits, and extinguishers — all assigned at once."
+  },
+  "Tag": {
+    explain: "A name-value pair attached to an Azure resource for organization and tracking. Example: CostCenter:12345, Environment:Production, Owner:Jesse. Up to 50 tags per resource. Tags do NOT inherit from resource groups to resources by default — you need Azure Policy to enforce that.",
+    analogy: "A sticky label on equipment: 'Belongs to: Kitchen, Cost Center: 1234, Bought on: 2024.' Helps you sort, track, and manage things at scale."
+  },
+  "Delete Lock (CanNotDelete)": {
+    explain: "A resource lock that prevents deletion but allows modification. You can still change settings, resize, update — but you cannot delete the resource. Even Owners can't delete it without removing the lock first. Locks override RBAC.",
+    analogy: "A padlock on the refrigerator door handle. You can put stuff in and take stuff out (modify), but you can't throw the fridge away (delete) without first removing the padlock."
+  },
+  "ReadOnly Lock": {
+    explain: "The strictest lock. Prevents ALL modifications and deletions. You can only read/view the resource. Warning: can cause unexpected issues — for example, a ReadOnly lock on a storage account prevents listing access keys (because listing keys is a POST operation internally).",
+    analogy: "The fridge is now behind museum glass. You can look at it, but you can't open it, add food, change the temperature, or move it. Everything is frozen in place."
+  },
+  "Address Space": {
+    explain: "The range of IP addresses available within a Virtual Network (VNet), defined in CIDR notation (like 10.0.0.0/16). This is the total pool of IPs you can carve into subnets. Choose carefully — it's hard to change later and cannot overlap with peered VNets or on-premises networks.",
+    analogy: "The total number of parking spots in your parking garage. A /16 address space is a massive garage with 65,536 spots. You divide it into sections (subnets) for different departments."
+  },
+  "CIDR Notation": {
+    explain: "A compact way to describe IP ranges. The number after the / tells how many bits are the network portion. /16 = 65,536 addresses. /24 = 256 addresses. /27 = 32 addresses. Higher number after / = fewer addresses. Formula: 2^(32 - prefix) = total addresses.",
+    analogy: "Like apartment numbering: /16 means the first two numbers are the building code and you have 65,536 units. /24 means the first three numbers are the building code and you have 256 units per building."
+  },
+  "Subnet": {
+    explain: "A subdivision of a VNet's address space. Resources are placed into subnets. Each subnet gets its own range of IPs and can have its own Network Security Group. Azure reserves 5 IPs per subnet (network address, gateway, DNS x2, broadcast). Minimum size is /29 (8 total, 3 usable).",
+    analogy: "Individual floors in your parking garage. Floor 1 (10.0.1.0/24) is for accounting's cars. Floor 2 (10.0.2.0/24) is for engineering. Each floor has its own gate (NSG) controlling who can enter."
+  },
+  "Private IP": {
+    explain: "An IP address from the RFC 1918 private ranges (10.x.x.x, 172.16-31.x.x, 192.168.x.x) that only works within your VNet. Not routable on the internet. Azure VMs get a private IP automatically when placed in a subnet. Can be dynamic (changes on restart) or static (stays the same).",
+    analogy: "Your internal extension number at work. Colleagues can reach you at ext. 4523, but someone outside the building can't dial that number — it only works internally."
+  },
+  "Public IP": {
+    explain: "An internet-routable IP address that allows resources to communicate with the internet. Assigned to VMs, load balancers, or application gateways. Can be dynamic (changes when the resource stops/starts) or static (permanent). Standard SKU is zone-redundant and recommended.",
+    analogy: "Your publicly listed phone number that anyone in the world can call. Your extension (private IP) only works inside the building, but your public number works from anywhere."
+  },
+  "Health Probe": {
+    explain: "A check that a Load Balancer or Application Gateway performs on backend VMs to see if they're alive and healthy. If a VM fails the probe (doesn't respond, returns an error), traffic stops being sent to it. Types: TCP (is the port open?), HTTP/HTTPS (does the endpoint return 200 OK?).",
+    analogy: "The restaurant manager walking around checking each table: 'Are you still serving? Great, send the next customer here. Oh, Table 3 is closed? Skip it until it reopens.'"
+  },
+  "SAS Token": {
+    explain: "Shared Access Signature — a time-limited, permission-scoped URL token that grants access to Azure Storage resources without sharing account keys. You define: what service (blob/file/queue/table), what permissions (read/write/delete), when it expires, and from which IPs. Three types: Account SAS, Service SAS, and User Delegation SAS (most secure, signed with Entra ID).",
+    analogy: "A temporary visitor parking pass that says: 'Valid for Lot B only, read-only access, expires at 5 PM today, only from this license plate number.' Way safer than giving out the master garage key."
+  },
+  "Access Key": {
+    explain: "The root password to a storage account. Two keys per account (for rotation). Whoever has the key has FULL access to everything in the storage account. Never share in code or check into source control. Use SAS tokens or Managed Identities instead. Rotate regularly.",
+    analogy: "The master key to the entire storage facility. Opens every door, every lock, every safe. If someone steals it, they have access to everything. That's why you NEVER leave it lying around."
+  },
+  "Stored Access Policy": {
+    explain: "A set of permissions and time constraints defined ON the storage container itself. SAS tokens can reference this policy — meaning if you need to revoke access, you modify the policy instead of hunting down every issued SAS token. Maximum 5 policies per container.",
+    analogy: "Instead of printing 100 visitor passes with an expiration date baked in (SAS tokens), you have a master visitor rule posted at the front desk (stored access policy). Want to revoke all passes? Just update the rule at the desk."
+  },
+  "Service Endpoint": {
+    explain: "A VNet feature that provides optimal, direct routing from your subnet to Azure PaaS services (Storage, SQL, etc.) over the Microsoft backbone network. Traffic stays on Microsoft's network instead of going over the public internet. The service still has a PUBLIC IP, but access is restricted to your VNet.",
+    analogy: "A dedicated express lane on the highway from your neighborhood directly to the store. You still enter through the store's public entrance (public IP), but you take a private highway to get there."
+  },
+  "Private Endpoint": {
+    explain: "Gives an Azure PaaS service (Storage, SQL, etc.) a PRIVATE IP address inside your VNet. Traffic never leaves your virtual network. More secure than Service Endpoints because the service effectively becomes a resource inside your network. DNS resolution changes to point to the private IP.",
+    analogy: "Instead of taking a private highway to the store (Service Endpoint), the store builds a private branch INSIDE your neighborhood. You walk to it using your internal streets — never touching the public road."
+  },
+  "Availability Set": {
+    explain: "A logical grouping of VMs that spreads them across Fault Domains (separate server racks) and Update Domains (groups that reboot sequentially during maintenance) WITHIN a single datacenter. Protects against hardware failures and planned maintenance. SLA: 99.95% for 2+ VMs.",
+    analogy: "Keeping your eggs in different baskets on different shelves. If one shelf (rack) collapses, the other baskets (VMs) survive. If the janitor needs to clean one shelf at a time (maintenance), the other shelves stay operational."
+  },
+  "Availability Zone": {
+    explain: "Physically separate datacenters within an Azure region, each with independent power, cooling, and networking. Distributing VMs across zones protects against an entire datacenter failure. At least 3 zones per enabled region. SLA: 99.99% for 2+ VMs across 2+ zones — the highest VM SLA.",
+    analogy: "Having offices in 3 different buildings across the city. If one building loses power (datacenter failure), the other two keep running. Much better than having everyone on different floors of the SAME building (Availability Set)."
+  },
+  "Fault Domain": {
+    explain: "A group of VMs that share a common physical server rack, power source, and network switch in a datacenter. VMs in different Fault Domains are on different racks. If a rack fails (power outage, switch failure), only VMs in that Fault Domain go down. Up to 3 FDs per Availability Set.",
+    analogy: "Different power circuits in your house. The kitchen and bedroom are on different circuits. If the kitchen circuit blows, the bedroom lights still work."
+  },
+  "Update Domain": {
+    explain: "A logical group of VMs that are rebooted together during planned Azure maintenance. Azure reboots one Update Domain at a time, waiting for it to recover before moving to the next. Up to 20 UDs per Availability Set. Ensures at least some VMs are always running during maintenance.",
+    analogy: "Painting offices floor by floor. Paint Floor 1 on Monday (those offices are closed), Floor 2 on Tuesday, Floor 3 on Wednesday. At any given time, most floors are still operational."
+  },
+  "RPO": {
+    explain: "Recovery Point Objective — the maximum amount of DATA you can afford to LOSE, measured in time. RPO of 1 hour means your most recent backup/recovery point is at most 1 hour old. If a disaster strikes, you lose at most 1 hour of data. Lower RPO = more frequent replication = more expensive.",
+    analogy: "How often you save your Word document. If you save every 5 minutes (RPO = 5 min) and your laptop crashes, you lose at most 5 minutes of work. Save every hour? You might lose an hour's worth."
+  },
+  "RTO": {
+    explain: "Recovery Time Objective — the maximum amount of DOWNTIME you can tolerate. RTO of 2 hours means your systems must be back up and running within 2 hours of a disaster. Lower RTO = faster failover infrastructure = more expensive.",
+    analogy: "How fast the backup generator kicks in when power goes out. RTO of 0 minutes = instant switchover (expensive UPS). RTO of 2 hours = someone has to drive to the building and start the generator manually."
+  },
+  "KQL (Kusto Query Language)": {
+    explain: "The query language used in Azure Monitor's Log Analytics. NOT SQL — different syntax. Uses pipe (|) to chain operators: TableName | where Condition | project Columns | summarize count(). Key operators: where (filter), project (select columns), summarize (aggregate), ago() (time), count, top, extend, render.",
+    analogy: "Like a smart search engine for your Azure logs. Instead of Googling, you write precise queries: 'Show me all VMs where CPU was above 90% in the last hour, grouped by VM name, sorted by highest CPU first.'"
+  },
+  "Action Group": {
+    explain: "A reusable collection of notification and action preferences. When an alert fires, the Action Group determines WHO gets notified and HOW: email, SMS, push notification, voice call, webhook, Azure Function, Logic App, ITSM ticket, or automation runbook. One Action Group can be attached to many alert rules.",
+    analogy: "Your phone's emergency contacts list. When something goes wrong (alert fires), Azure checks the list and calls/texts/emails everyone on it. You set up the list once and reuse it for every type of emergency."
+  },
+  "Diagnostic Settings": {
+    explain: "Per-resource configurations that tell Azure WHERE to send that resource's logs and metrics. Destinations include: Log Analytics Workspace, Storage Account (for archival), Event Hub (for streaming), or Partner Solutions. You must explicitly enable Diagnostic Settings on each resource you want to monitor — they're not on by default.",
+    analogy: "Setting up mail forwarding for each apartment (resource). By default, diagnostic data goes nowhere. You have to tell each apartment: 'Forward your mail to the central mailroom (Log Analytics), the archive warehouse (Storage), and the real-time newsfeed (Event Hub).'"
+  },
+  "Log Analytics Workspace": {
+    explain: "A central repository in Azure Monitor where log data is collected, stored, and queried using KQL. Multiple resources can send logs to one workspace. Data is organized in tables (Heartbeat, AzureActivity, AzureDiagnostics, etc.). Free tier: 5 GB/month, 31-day retention. Paid: configurable up to 730 days.",
+    analogy: "The building's central security monitoring room with banks of screens and searchable recordings. All the security cameras (resources) send footage here, and you can search through it: 'Show me everyone who entered Floor 3 between 2 PM and 4 PM last Tuesday.'"
+  },
+  "Heartbeat": {
+    explain: "A signal sent by the Azure Monitor Agent on a VM every minute to confirm the VM is alive and communicating. If heartbeats stop, the VM is likely down or disconnected. The Heartbeat table in Log Analytics is commonly used to check VM health.",
+    analogy: "A pulse check. Every minute, each VM says 'I'm still here!' If it stops saying that, something's wrong — like checking someone's pulse to make sure they're still alive."
+  },
+  "Activity Log": {
+    explain: "Azure's built-in audit trail that records all MANAGEMENT-PLANE (control-plane) operations: who created/deleted/modified resources, when, from where, and whether it succeeded. Retained for 90 days by default. Can be exported to Log Analytics for longer retention and querying. NOT the same as resource diagnostic logs.",
+    analogy: "The building's access log: 'Jesse badged into Floor 3 at 2:14 PM. Admin Mary deleted the server room keycard at 3:00 PM.' It tracks WHO did WHAT to the building's infrastructure, not what happened inside each apartment."
+  },
+  "SSPR": {
+    explain: "Self-Service Password Reset — lets users reset their OWN password without calling IT. They verify their identity using pre-registered methods (authenticator app, phone, email, security questions). Can require 1 or 2 verification methods. With Entra Connect password writeback (P1), the new password syncs back to on-premises AD.",
+    analogy: "The 'Forgot Password' link for your corporate account. Instead of calling the help desk and waiting on hold, you verify yourself (text code, authenticator app) and set a new password yourself. Saves you time, saves IT money."
+  },
+  "Smart lockout": {
+    explain: "An Entra ID feature that blocks sign-in attempts that appear to be from attackers while allowing legitimate users in. Uses location intelligence — if someone fails 10 times from an unfamiliar location, they get locked out. If you fail from your usual location, you get more leeway. Cloud-based, no configuration needed.",
+    analogy: "A smart security guard who recognizes regulars. If a stranger keeps trying wrong passwords, the guard blocks them fast. If Jesse (a regular) typos his password twice, the guard gives him a few more tries because he knows Jesse."
+  },
+  "Banned password list": {
+    explain: "A list of common, weak passwords that Entra ID automatically blocks users from choosing. Includes a global Microsoft list (compiled from real-world leaked passwords) plus a custom list you can configure (your company name, product names, local sports teams, etc.). Checked during password set/change/reset.",
+    analogy: "A bouncer at a club with a 'not allowed' list. 'Password123? Nope. CompanyName2024? Nope. Not on my watch.' Forces people to pick actually secure passwords."
+  },
+  "Container": {
+    explain: "In Azure Blob Storage, a Container is a grouping of blobs (files). Similar to a folder but flat — no subfolders (though you can simulate folder structure with naming prefixes like 'images/cats/photo.jpg'). Every blob must be in a container. Access level can be: Private (default), Blob (anonymous read for blobs), or Container (anonymous read for everything).",
+    analogy: "A filing cabinet drawer. You put related documents (blobs) in the same drawer (container). The label on the drawer says who can open it."
+  },
+  "Block Blob": {
+    explain: "The most common blob type. Optimized for uploading large amounts of data efficiently. Composed of blocks that can be uploaded in parallel. Max size: 190.7 TiB. Used for: documents, images, videos, backups, logs — any unstructured data. Supports access tiers (Hot/Cool/Archive).",
+    analogy: "A cardboard box in your storage unit. You can put anything in it: photos, documents, videos. You can stack boxes (blocks) to make larger shipments."
+  },
+  "Append Blob": {
+    explain: "A blob type optimized for append operations (adding data to the end). Cannot modify or delete existing data — only add new data. Perfect for logging, audit trails, and event streaming where you only write new entries.",
+    analogy: "A notebook where you can only write on the NEXT blank page. You can't erase or modify previous pages. Great for keeping a diary or log."
+  },
+  "Page Blob": {
+    explain: "A blob type optimized for random read/write operations. Used as the backing storage for Azure VM disks (VHD files). Supports 512-byte pages. Max size: 8 TiB. You rarely interact with these directly — they power VM managed disks.",
+    analogy: "A hard drive in the cloud. It's optimized for the constant random reading and writing that virtual machines do. You don't use it directly — Azure uses it behind the scenes for your VM's disk."
+  },
+  "Hot": {
+    explain: "The default access tier for frequently accessed data. HIGHEST storage cost per GB but LOWEST access/read cost. Optimized for data that is read or modified often. No minimum storage duration.",
+    analogy: "The front shelf in your kitchen — easiest to reach (cheap to access), but takes up prime counter space (expensive to store). Put the stuff you use every day here."
+  },
+  "Cool": {
+    explain: "Access tier for data that is infrequently accessed. LOWER storage cost than Hot but HIGHER access cost. Data must remain for at least 30 days or you pay an early deletion fee. Good for short-term backups and older data accessed monthly.",
+    analogy: "The hall closet. Cheaper rent than the kitchen counter, but takes a bit more effort to dig something out. Store things you use once a month here."
+  },
+  "Archive": {
+    explain: "The cheapest storage tier. Data is stored OFFLINE and must be 'rehydrated' (moved to Hot or Cool) before it can be read — this takes up to 15 hours for standard priority. 180-day minimum storage duration. Used for compliance archives, historical data, raw backups you may never need.",
+    analogy: "Deep storage in a warehouse in another state. Super cheap to keep stuff there, but if you need something, a truck has to drive it to you overnight. Only put things here you almost never need to touch."
+  },
+  "SMB": {
+    explain: "Server Message Block — the standard network file sharing protocol used by Windows. Azure Files supports SMB 2.1 and 3.0 and later. Allows you to mount Azure file shares as network drives on Windows (net use Z: \\\\account.file.core.windows.net\\share), Linux, and macOS. Port 445.",
+    analogy: "The universal language that Windows computers use to share files on a network. When you map a network drive in Windows, you're speaking SMB. Azure Files speaks the same language."
+  },
+  "NFS": {
+    explain: "Network File System — the standard file sharing protocol used by Linux/Unix systems. Azure Files Premium supports NFS 4.1. Alternative to SMB for Linux-heavy environments. Requires Premium file shares and virtual network access.",
+    analogy: "Same concept as SMB but for the Linux world. Linux machines prefer NFS like English speakers prefer English and French speakers prefer French — same concept, different language."
+  },
+  "LRS": {
+    explain: "Locally Redundant Storage — 3 copies of your data within a single datacenter (single Availability Zone). Cheapest option. Protects against: drive failure, server failure, rack failure. Does NOT protect against: datacenter fire, flood, or entire region failure. 11 nines (99.999999999%) durability.",
+    analogy: "Keeping 3 copies of a document in different filing cabinets in the SAME office. If a cabinet breaks, you have backups. But if the whole office floods, all 3 copies are gone."
+  },
+  "ZRS": {
+    explain: "Zone Redundant Storage — 3 copies of your data spread across 3 separate Availability Zones in one region. Protects against an entire datacenter going down (one zone fails, other two still have copies). Recommended for high-availability applications.",
+    analogy: "Keeping copies in 3 different office buildings across the city. If one building loses power, the other two still have your documents. Much safer than all copies in one building."
+  },
+  "GRS": {
+    explain: "Geo-Redundant Storage — 3 copies locally (LRS) PLUS 3 more copies asynchronously replicated to a PAIRED REGION hundreds of miles away. Protects against an entire region being destroyed. 16 nines durability. Secondary region data is NOT readable unless you failover or use RA-GRS.",
+    analogy: "Copies in the same office (LRS) PLUS copies shipped to a backup office in another state. If your entire state gets hit by a hurricane, the other state still has everything."
+  },
+  "RA-GRS": {
+    explain: "Read-Access Geo-Redundant Storage — Same as GRS but you can READ from the secondary region without waiting for a failover. The secondary endpoint has '-secondary' appended to the account name. Data in the secondary may be slightly behind primary (asynchronous replication).",
+    analogy: "Same as GRS (backup office in another state) but you can actually CALL the other office and ask them to read documents to you. With plain GRS, the other office just stores the documents — you can't access them until you officially move there."
+  },
+  "GZRS": {
+    explain: "Geo-Zone-Redundant Storage — The best of both worlds. 3 copies across 3 Availability Zones locally (ZRS) + 3 copies in a paired region (GRS). Protects against both datacenter failure AND regional failure. The premium option for mission-critical data.",
+    analogy: "Copies in 3 different buildings in your city AND copies in buildings in another state. The most protected your data can be. Overkill for cat photos, essential for financial records."
+  },
+  "Lifecycle management": {
+    explain: "Automated rules that transition blobs between access tiers or delete them based on age. Example: 'Move blobs to Cool after 30 days, Archive after 90 days, delete after 365 days.' Applied at the storage account level. Saves money by ensuring data is always in the optimal tier for its age.",
+    analogy: "An automatic filing system: 'Active projects stay on my desk. After 30 days, move to the filing cabinet. After 90 days, send to deep storage. After 1 year, shred.'"
+  },
+  "Recovery Services Vault": {
+    explain: "A management entity in Azure that stores backup data and recovery points. Used for: VM backup, Azure Files backup, SQL backup, on-premises backup, and Azure Site Recovery. MUST be in the same region as the resources it protects. Supports soft delete (14 extra days of protection).",
+    analogy: "A bank safety deposit vault specifically for your backup tapes. Only accessible from the branch in your city (same region). If someone accidentally shreds a tape (deletes a backup), the bank keeps a copy for 14 more days just in case."
+  },
+  "Backup Policy": {
+    explain: "Defines how often to take backups and how long to keep them. Settings include: backup frequency (daily, weekly), retention for daily/weekly/monthly/yearly recovery points, snapshot retention period (for instant restore), and timezone. Different policies can be assigned to different VMs.",
+    analogy: "Your auto-save settings. 'Save every day at midnight. Keep the last 30 daily saves. Keep one save from each week for 12 weeks. Keep one save from each month for 12 months. Keep one save from each year for 10 years.'"
+  },
+  "App Service Plan": {
+    explain: "The underlying compute infrastructure for Azure App Service web apps. Defines: the VM size (CPU/RAM), number of instances, and feature set available. Multiple web apps can share one plan. Tiers from Free (no SLA, limited) to Isolated (dedicated environment). Scaling happens at the plan level.",
+    analogy: "The hosting plan for your websites, like a web hosting subscription. The cheapest plan gives you a shared room (Free tier). Standard gives you a private room. Premium is a suite. Isolated is renting the entire floor."
+  },
+  "Deployment Slot": {
+    explain: "A live, separate instance of your web app used for staging and testing before going to production. You deploy code to the staging slot, test it, then SWAP it into the production slot instantly (just a routing change — zero downtime). If something breaks, swap back. Requires Standard tier or above.",
+    analogy: "Having an understudy actor ready backstage. You rehearse with the understudy (staging slot). When they're ready, you swap them with the lead actor (production slot) — the audience (users) sees no interruption. If the understudy flubs, swap the lead back in instantly."
+  },
+  "Alert Rule": {
+    explain: "A monitoring configuration that watches for specific conditions and triggers notifications when those conditions are met. Components: target resource (what to watch), condition/signal (what threshold to trigger on), actions (who to notify). Types: metric alerts, log alerts, activity log alerts, smart detection.",
+    analogy: "Setting an alarm. 'If the temperature (CPU) goes above 90 degrees (90%) for more than 5 minutes, ring the bell (send email/SMS via Action Group).'"
+  }
+};
+
+// ===== INTERACTIVE KEY TERM COMPONENT =====
+function KeyTerm({ term }) {
+  const [open, setOpen] = useState(false);
+  const entry = GLOSSARY[term];
+
+  return (
+    <div style={{display:'inline-block'}}>
+      <span
+        className="key-term"
+        onClick={() => setOpen(o => !o)}
+        title={entry ? "Click to expand definition" : term}
+      >
+        {entry && <span className={`arrow ${open ? 'open' : ''}`}>▶</span>}
+        {term}
+      </span>
+      {open && entry && (
+        <div className="key-term-expanded">
+          <div className="term-title">📘 {term}</div>
+          <div className="term-explain">{entry.explain}</div>
+          {entry.analogy && (
+            <div className="term-analogy">
+              💡 <strong>Analogy:</strong> {entry.analogy}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ===== MAIN APP =====
 function App() {
   const [view, setView] = useState('dashboard'); // dashboard | module | quiz | roadmap
@@ -1600,8 +2026,10 @@ function LearnSection({ module, markComplete, isComplete }) {
             <p key={pi} style={{marginBottom: pi < c.content.split('\n\n').length - 1 ? '12px' : '0'}}>{para}</p>
           ))}
           {c.keyTerms && (
-            <div style={{marginTop:'12px', display:'flex', flexWrap:'wrap', gap:'6px'}}>
-              {c.keyTerms.map((t,j) => <span key={j} className="key-term">{t}</span>)}
+            <div style={{marginTop:'12px'}}>
+              <div style={{display:'flex', flexWrap:'wrap', gap:'6px'}}>
+                {c.keyTerms.map((t,j) => <KeyTerm key={j} term={t} />)}
+              </div>
             </div>
           )}
           {c.tips && c.tips.map((tip,j) => (
